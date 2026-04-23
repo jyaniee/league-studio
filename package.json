@@ -1,0 +1,11 @@
+{
+  "name": "league-studio",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev:overlay": "pnpm --filter overlay dev",
+    "dev:server": "pnpm --filter server dev",
+    "build:overlay": "pnpm --filter overlay build",
+    "build:server": "pnpm --filter server build"
+  }
+}

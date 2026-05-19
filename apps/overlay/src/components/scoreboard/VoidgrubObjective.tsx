@@ -1,5 +1,16 @@
 import React from 'react';
 
-export default function VoidgrubObjective() {
-  return <span style={{ color: '#B794F4' }}>👾 5 / 6 ACTIVE</span>;
+type VoidgrubObjectiveProps = {
+  blueCount: number;
+  redCount: number;
+  maxCount?: number;
+};
+
+export default function VoidgrubObjective({blueCount, redCount, maxCount = 6}: VoidgrubObjectiveProps) {
+
+  return (
+    <span style={{ color: '#B794F4'}}>
+      👾 {blueCount} / {redCount} / {maxCount} ACTIVE
+    </span>
+  );
 }

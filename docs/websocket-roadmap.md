@@ -233,7 +233,7 @@ D1 → D2 → D3 → D4  ──►  #6, #7
 
 ---
 
-## Issue 제목 템플릿 (복사용)
+## Issue 제목 템플릿
 
 ```
 [WS] gameStateProvider 인터페이스 정의

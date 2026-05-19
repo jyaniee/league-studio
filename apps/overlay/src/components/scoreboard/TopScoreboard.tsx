@@ -2,17 +2,33 @@ import React, { useState } from 'react';
 import MainBar from './MainBar';
 import BottomObjectiveBar from './BottomObjectiveBar';
 
+export type TeamData = {
+  name: string;
+  logo: string;
+  kills: number;
+  towers: number;
+  gold: string;
+  goldDiff: string;
+};
+
+export type GameData = {
+  blueTeam: TeamData;
+  redTeam: TeamData;
+  gameTime: string;
+};
+
 export default function TopScoreboard() {
-  const [gameData, setGameData] = useState({
+  const [gameData, setGameData] = useState<GameData>({
     blueTeam: { name: 'KT', logo: '/kt-logo.png', kills: 12, towers: 4, gold: '45.2k', goldDiff: '+2.1k' },
     redTeam: { name: 'HLE', logo: '/hle-logo.png', kills: 8, towers: 2, gold: '43.1k', goldDiff: '-2.1k' },
     gameTime: "24:15"
   });
 
-  const handleUpdateKill = (team: 'blueTeam' | 'redTeam', amount: number) => {
+  const handleUpdateKill = (side: 'blue' | 'red') => {
+    const teamKey = side === 'blue' ? 'blueTeam' : 'redTeam';
     setGameData(prev => ({
       ...prev,
-      [team]: { ...prev[team], kills: prev[team].kills + amount }
+      [teamKey]: { ...prev[teamKey], kills: prev[teamKey].kills + 1 }
     }));
   };
 

@@ -1,15 +1,28 @@
-import { WebSocketServer } from "ws";
-import { getMockGameState } from "./mock/gameState";
+import { WebSocketServer, type WebSocket } from "ws";
+import { gameStateIntervalMs, wsPort } from "./config";
+import { getCurrentGameState } from "./gameStateProvider";
 
-const wss = new WebSocketServer({ port: 8081 });
+const wss = new WebSocketServer({ port: wsPort });
+
+async function sendGameState(socket: WebSocket): Promise<void> {
+  try {
+    const gameState = await getCurrentGameState();
+    if (gameState === null) return;
+    if (socket.readyState !== socket.OPEN) return;
+    socket.send(JSON.stringify(gameState));
+  } catch (error) {
+    console.error("Failed to send game state:", error);
+  }
+}
 
 wss.on("connection", (socket) => {
   console.log("Client connected");
 
+  void sendGameState(socket);
+
   const interval = setInterval(() => {
-    const gameState = getMockGameState();
-    socket.send(JSON.stringify(gameState));
-  }, 1000);
+    void sendGameState(socket);
+  }, gameStateIntervalMs);
 
   socket.on("close", () => {
     clearInterval(interval);
@@ -17,4 +30,4 @@ wss.on("connection", (socket) => {
   });
 });
 
-console.log("WebSocket server running on ws://localhost:8081");
+console.log(`WebSocket server running on ws://localhost:${wsPort}`);

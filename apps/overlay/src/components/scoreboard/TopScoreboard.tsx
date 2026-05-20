@@ -25,8 +25,8 @@ export type GameData = {
 // 3. 초기 데이터 세팅
 const initialData: GameData = {
   gameTime: "13:05",
-  blueTeam: { name: "KT", logo: ktLogo, kills: 12, gold: "45.2K", goldDiff: "+2.1K", towers: 4 , dragons: [] },
-  redTeam: { name: "HLE", logo: hleLogo, kills: 8, gold: "43.1K", goldDiff: "-2.1K", towers: 2 }, dragons: ["clound","mountain"]
+  blueTeam: { name: "KT", logo: ktLogo, kills: 12, gold: "45.2K", goldDiff: "+2.1K", towers: 4 },
+  redTeam: { name: "HLE", logo: hleLogo, kills: 8, gold: "43.1K", goldDiff: "-2.1K", towers: 2 }
 };
 
 // 4. 메인 컴포넌트
@@ -41,9 +41,26 @@ export default function TopScoreboard() {
   };
 
   return (
-    <div style={{ width: '100%', height: '100vh', backgroundColor: 'transparent', padding: '20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <MainBar gameData={gameData} updateKill={handleUpdateKill} />
-      <TimerObjectiveBar gameTime={gameData.gameTime} />
+    <div style={{ 
+      width: '100%', 
+      height: '100vh', 
+      backgroundColor: 'transparent', 
+      padding: '20px 0', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      boxSizing: 'border-box'
+    }}>
+      {/* 1. 상단 메인 스코어보드 바 */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <MainBar gameData={gameData} updateKill={handleUpdateKill} />
+      </div>
+
+      {/* 2. 하단 타이머 및 오브젝트 바 */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <TimerObjectiveBar gameTime={gameData.gameTime} />
+      </div>
     </div>
   );
 }

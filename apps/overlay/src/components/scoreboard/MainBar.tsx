@@ -19,34 +19,62 @@ type GameData = {
 
 type MainBarProps = {
   gameData: GameData;
-  handleUpdateKill?: (team: 'blueTeam'| 'redTeam',delta: number)  => void;
+  updateKill?: (team: 'blueTeam'| 'redTeam', delta: number) => void;
 };
 
-export default function MainBar({ gameData, handleUpdateKill }: MainBarProps) {
+export default function MainBar({ gameData, updateKill }: MainBarProps) {
   return (
-  
     <div style={{ 
       width: '100%', 
-      maxWidth: '1300px', 
-      height: '80px', 
+      maxWidth: '1237px', 
+      height: '90px', 
       display: 'flex', 
       alignItems: 'center', 
-      background: 'linear-gradient(to right, #2E65D6 0%, #101124 30%, #101124 70%, #E03155 100%)', 
+      justifyContent: 'space-between',
+      
+    
+      background: 'linear-gradient(to right, #3B82F6 0%, #17112B 22%, #17112B 78%, #F43F5E 100%)', 
+      
       boxShadow: '0 4px 20px rgba(0,0,0,0.5)', 
-      padding: '0 40px'
+      padding: '0 37px', 
+      boxSizing: 'border-box',
+      fontFamily: '"Sora", sans-serif'
     }}>
       
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '30px' }}>
+      {/* 🔵 블루팀 영역 */}
+      <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
         <TeamHeader name={gameData.blueTeam.name} logo={gameData.blueTeam.logo} side="blue" />
+        
+
+        <div style={{ 
+          width: '3.5px', 
+          height: '59px', 
+          backgroundColor: 'rgba(255, 255, 255, 0.65)', 
+          marginLeft: '40px',       
+          marginRight: '20px'       
+        }}></div>
+        
         <TeamStats kills={gameData.blueTeam.kills} towers={gameData.blueTeam.towers} gold={gameData.blueTeam.gold} goldDiff={gameData.blueTeam.goldDiff} side="blue" />
       </div>
       
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 40px' }}>
+     {/* 🏢 중앙 점수판 영역 */}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <CenterScore blueKills={gameData.blueTeam.kills} redKills={gameData.redTeam.kills} />
       </div>
-
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '30px' }}>
+      
+      {/* 🔴 레드팀 영역 */}
+      <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
         <TeamStats kills={gameData.redTeam.kills} towers={gameData.redTeam.towers} gold={gameData.redTeam.gold} goldDiff={gameData.redTeam.goldDiff} side="red" />
+        
+
+        <div style={{ 
+          width: '3.5px', 
+          height: '59px', 
+          backgroundColor: 'rgba(255, 255, 255, 0.65)', 
+          marginLeft: '20px',
+          marginRight: '40px'
+        }}></div>
+        
         <TeamHeader name={gameData.redTeam.name} logo={gameData.redTeam.logo} side="red" />
       </div>
 

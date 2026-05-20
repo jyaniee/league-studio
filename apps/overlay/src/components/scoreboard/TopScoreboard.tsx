@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MainBar from './MainBar';
-import BottomObjectiveBar from './BottomObjectiveBar';
+import TimerObjectiveBar from './TimerObjectiveBar';
 
 export type TeamData = {
   name: string;
@@ -35,7 +35,7 @@ export default function TopScoreboard() {
   return (
     <div style={{ width: '100%', height: '100vh', backgroundColor: 'transparent', padding: '20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <MainBar gameData={gameData} handleUpdateKill={handleUpdateKill} />
-      <BottomObjectiveBar gameTime={gameData.gameTime} />
+      <TimerObjectiveBar gameTime={gameData.gameTime} />
     </div>
   );
 }

@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 import logoImg from '../../assets/league-studio_logo_draft_v3.png';
 
 type Side = "blueTeam" | "redTeam";
@@ -22,7 +20,7 @@ export default function CenterScore({
       
       {/* 블루팀 킬 스코어 */}
       <span style={{fontSize: '40px', fontWeight: '500', color: '#FFF' }}>
-
+        {blueKills}
       </span>
 
       {/* 🏢 중앙 로고 영역 */}

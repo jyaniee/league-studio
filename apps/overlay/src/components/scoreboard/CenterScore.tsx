@@ -1,8 +1,9 @@
 import React from 'react';
 
 
-type Side = "blueTeam" | "redTeam";
+import logoImg from '../../assets/league-studio_logo_draft_v3.png';
 
+type Side = "blueTeam" | "redTeam";
 
 type CenterScoreProps = {
   blueKills: number;
@@ -16,26 +17,39 @@ export default function CenterScore({
   updatekill, 
 }: CenterScoreProps) { 
   
-
   return (
     <div style={{ width: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '25px' }}>
       
-      <span style={{fontSize: '40px', fontWeight: '300', color: '#FFF' }}>
-        {blueKills}
+      {/* 블루팀 킬 스코어 */}
+      <span style={{fontSize: '40px', fontWeight: '500', color: '#FFF' }}>
+
       </span>
 
-      <div style={{ width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* 🏢 중앙 로고 영역 */}
+      <div style={{ 
+        width: '60px', 
+        height: '60px', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+      }}>
         <img 
-          src="/league-studio_logo_draft_v3.png" 
-          style={{ width: '45px', height: '45px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} 
-          alt="Logo" 
+          src={logoImg} 
+          style={{ 
+            width: '60px', 
+            height: '60px', 
+            objectFit: 'contain', 
+            filter: 'brightness(0) invert(1) brightness(1.5)' 
+          }} 
+          alt="League Studio Logo" 
         />
       </div>
 
-      <span style={{ fontSize: '40px', fontWeight: '300', color: '#FFF' }}>
-        {redKills}
+      {/* 레드팀 킬 스코어 */}
+      <span style={{ fontSize: '40px', fontWeight: '500', color: '#FFF' }}>
+        0
       </span>
       
     </div>
   );
-} //
+}

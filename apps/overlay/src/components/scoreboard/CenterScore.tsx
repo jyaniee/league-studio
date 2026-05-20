@@ -18,7 +18,7 @@ export default function CenterScore({
   return (
     <div style={{ width: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '25px' }}>
       
-      <span style={{ fontSize: '40px', fontWeight: '300', color: '#3182CE' }}>
+      <span style={{ fontSize: '40px', fontWeight: '300', color: '#FFF' }}>
         {blueKills}
       </span>
 
@@ -30,7 +30,7 @@ export default function CenterScore({
         />
       </div>
 
-      <span style={{ fontSize: '40px', fontWeight: '300', color: '#E53E3E' }}>
+      <span style={{ fontSize: '40px', fontWeight: '300', color: '#FFF' }}>
         {redKills}
       </span>
       

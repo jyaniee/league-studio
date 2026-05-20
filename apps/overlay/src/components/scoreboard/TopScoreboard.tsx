@@ -2,39 +2,47 @@ import React, { useState } from 'react';
 import MainBar from './MainBar';
 import TimerObjectiveBar from './TimerObjectiveBar';
 
+// 1. 로고 이미지 불러오기
+import ktLogo from '../../assets/kt-rolster.png'; 
+import hleLogo from '../../assets/hanwha.png';
+
+// 2. 타입 정의
 export type TeamData = {
   name: string;
   logo: string;
   kills: number;
-  towers: number;
   gold: string;
   goldDiff: string;
+  towers: number;
 };
 
 export type GameData = {
+  gameTime: string;
   blueTeam: TeamData;
   redTeam: TeamData;
-  gameTime: string;
 };
 
-export default function TopScoreboard() {
-  const [gameData, setGameData] = useState<GameData>({
-    blueTeam: { name: 'KT', logo: '/kt-logo.png', kills: 12, towers: 4, gold: '45.2k', goldDiff: '+2.1k' },
-    redTeam: { name: 'HLE', logo: '/hle-logo.png', kills: 8, towers: 2, gold: '43.1k', goldDiff: '-2.1k' },
-    gameTime: "24:15"
-  });
+// 3. 초기 데이터 세팅
+const initialData: GameData = {
+  gameTime: "13:05",
+  blueTeam: { name: "KT", logo: ktLogo, kills: 12, gold: "45.2K", goldDiff: "+2.1K", towers: 4 , dragons: [] },
+  redTeam: { name: "HLE", logo: hleLogo, kills: 8, gold: "43.1K", goldDiff: "-2.1K", towers: 2 }, dragons: ["clound","mountain"]
+};
 
-  const handleUpdateKill = (side: 'blue' | 'red') => {
-    const teamKey = side === 'blue' ? 'blueTeam' : 'redTeam';
+// 4. 메인 컴포넌트
+export default function TopScoreboard() {
+  const [gameData, setGameData] = useState<GameData>(initialData);
+
+  const handleUpdateKill = (team: 'blueTeam' | 'redTeam', delta: number) => {
     setGameData(prev => ({
       ...prev,
-      [teamKey]: { ...prev[teamKey], kills: prev[teamKey].kills + 1 }
+      [team]: { ...prev[team], kills: Math.max(0, prev[team].kills + delta) }
     }));
   };
 
   return (
     <div style={{ width: '100%', height: '100vh', backgroundColor: 'transparent', padding: '20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <MainBar gameData={gameData} handleUpdateKill={handleUpdateKill} />
+      <MainBar gameData={gameData} updateKill={handleUpdateKill} />
       <TimerObjectiveBar gameTime={gameData.gameTime} />
     </div>
   );

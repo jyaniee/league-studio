@@ -16,3 +16,6 @@ pnpm-debug.log*
 
 .DS_Store
 .vscode/
+
+# exception
+!.env.example

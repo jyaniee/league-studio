@@ -1,7 +1,9 @@
 import type { GameState } from "@league-studio/shared-types";
 import { calculateObjectives } from "./objectiveTimers";
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // 롤 클라이언트 api 에 인증서 문제 때문에 node에서 막힐 수 있음. 인증서 검사를 끄는 코드
+if (process.env.ALLOW_INSECURE_LOCAL_TLS === "true"){
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // 롤 클라이언트 api 에 인증서 문제 때문에 node에서 막힐 수 있음. 인증서 검사를 끄는 코드
+}
 
 const API_BASE_URL = "https://127.0.0.1:2999/liveclientdata";
 

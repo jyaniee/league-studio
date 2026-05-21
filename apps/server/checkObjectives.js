@@ -1,3 +1,4 @@
+// 터미널 확인용 코드
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const API = "https://127.0.0.1:2999/liveclientdata";

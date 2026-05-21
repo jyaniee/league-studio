@@ -1,30 +1,33 @@
-import { WebSocketServer } from "ws";
-import { getMockGameState } from "./mock/gameState";
-import { getLiveClientGameState } from "./liveClientApi";
+import { WebSocketServer, type WebSocket } from "ws";
+import { gameStateIntervalMs, wsPort } from "./config";
+import { getCurrentGameState } from "./gameStateProvider";
 
-const wss = new WebSocketServer({ port: 8081 });
-//데이터를 가져오는 함수
-async function getGameState() {
+const wss = new WebSocketServer({ port: wsPort });
+
+async function sendGameState(socket: WebSocket): Promise<void> {
   try {
-    return await getLiveClientGameState();
+    const gameState = await getCurrentGameState();
+    if (gameState === null) return;
+    if (socket.readyState !== socket.OPEN) return;
+    socket.send(JSON.stringify(gameState));
   } catch (error) {
-    console.warn("Live Client API 연결 실패. mock 데이터 사용 중.");
-    return getMockGameState();
+    console.error("Failed to send game state:", error);
   }
 }
-//프론트 서버에 연결됐을 때 실행
+
 wss.on("connection", (socket) => {
   console.log("Client connected");
-//1초마다 게임 상태를 가져와서 프론트로 보냄.
-  const interval = setInterval(async () => {
-    const gameState = await getGameState();
-    socket.send(JSON.stringify(gameState));
-  }, 1000);
-//프론트 연결이 끊기면 반복 전송을 멈춤
+
+  void sendGameState(socket);
+
+  const interval = setInterval(() => {
+    void sendGameState(socket);
+  }, gameStateIntervalMs);
+
   socket.on("close", () => {
     clearInterval(interval);
     console.log("Client disconnected");
   });
 });
 
-console.log("WebSocket server running on ws://localhost:8081");
+console.log(`WebSocket server running on ws://localhost:${wsPort}`);

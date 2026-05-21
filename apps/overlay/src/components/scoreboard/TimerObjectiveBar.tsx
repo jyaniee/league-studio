@@ -1,6 +1,6 @@
 import React from 'react';
-import 바람용 from '../../assets/바람용.png';
-import 화염용 from '../../assets/화염용.png';
+import 바람용 from '../../assets/objectives/dragons/cloud-drake.png';
+import 화염용 from '../../assets/objectives/dragons/infernal-drake.png';
 
 export default function TimerObjectiveBar() {
   return (

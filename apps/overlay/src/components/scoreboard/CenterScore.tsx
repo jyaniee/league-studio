@@ -1,5 +1,5 @@
 import React from 'react';
-import logoImg from '../../assets/league-studio_logo_draft_v3.png';
+import logoImg from '../../assets/brand/league-studio_logo_draft_v3.png';
 
 type Side = "blueTeam" | "redTeam";
 

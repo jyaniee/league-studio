@@ -3,8 +3,8 @@ import MainBar from './MainBar';
 import TimerObjectiveBar from './TimerObjectiveBar';
 
 // 1. 로고 이미지 불러오기
-import ktLogo from '../../assets/kt-rolster.png'; 
-import hleLogo from '../../assets/hanwha.png';
+import ktLogo from '../../assets/teams/kt-rolster.png'; 
+import hleLogo from '../../assets/teams/hanwha.png';
 
 // 2. 타입 정의
 export type TeamData = {

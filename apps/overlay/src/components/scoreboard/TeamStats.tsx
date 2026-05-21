@@ -1,7 +1,7 @@
 import React from 'react';
 
-import coinImg from '../../assets/coin.png';
-import towerImg from '../../assets/tower.png';
+import coinImg from '../../assets/scoreboard/coin.png';
+import towerImg from '../../assets/scoreboard/tower.png';
 
 const BLUE_TOWER_FILTER = 'invert(48%) sepia(82%) saturate(4156%) hue-rotate(203deg) brightness(97%) contrast(97%)';
 const BLUE_COIN_FILTER = 'invert(48%) sepia(82%) saturate(4156%) hue-rotate(203deg) brightness(97%) contrast(97%)';

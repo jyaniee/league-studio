@@ -41,26 +41,21 @@ export default function TopScoreboard() {
   };
 
   return (
-    <div style={{ 
-      width: '100%', 
-      height: '100vh', 
-      backgroundColor: 'transparent', 
-      padding: '20px 0', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      boxSizing: 'border-box'
-    }}>
-      {/* 1. 상단 메인 스코어보드 바 */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <MainBar gameData={gameData} updateKill={handleUpdateKill} />
-      </div>
-
-      {/* 2. 하단 타이머 및 오브젝트 바 */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <TimerObjectiveBar gameTime={gameData.gameTime} />
-      </div>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        zIndex: 10,
+        pointerEvents: 'none',
+      }}
+    >
+      <MainBar gameData={gameData} updateKill={handleUpdateKill} />
+      <TimerObjectiveBar gameTime={gameData.gameTime} />
     </div>
   );
 }

@@ -10,6 +10,15 @@ export type DataSource =
   | "observer-tool"
   | "mock";
 
+export type DragonType =
+  | "cloud"
+  | "infernal"
+  | "mountain"
+  | "ocean"
+  | "hextech"
+  | "chemtech"
+  | "elder";
+
 export type ObjectiveTimerStatus =
   | "alive"    // 살아있음
   | "waiting"  // 처치됐고 재생성 대기 중
@@ -56,9 +65,13 @@ export interface TeamState {
   name: string;
   tag?: string;
   logoUrl?: string;
+
   kills: number;
-  globalGold?: number; // 옵저버 툴(OCR)로 수집하기 위해 Optional
+  globalGold?: number; // 옵저버 툴(OCR)로 수집
   towers: number;
+
+  dragons: DragonType[]; // 해당 팀이 획득한 드래곤 목록
+  voidgrubs: number; // 해당 팀이 처치한 공허 유충 수
 }
 
 

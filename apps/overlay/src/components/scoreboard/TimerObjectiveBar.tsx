@@ -1,5 +1,5 @@
 import React from 'react';
-import type { DragonType, GameState, TeamState } from '@league-studio/shared-types';
+import type { DragonType, GameState } from '@league-studio/shared-types';
 
 import GameTimer from './GameTimer';
 
@@ -13,7 +13,13 @@ import elderDrake from '../../assets/objectives/dragons/elder-dragon.png';
 
 import voidgrubIcon from '../../assets/objectives/major/voidgrub.png';
 
-type timerObjectiveBarProps = {
+const SCOREBOARD_WIDTH = 1080;
+const TIMER_OBJECTIVE_BAR_HEIGHT = 36;
+
+const TOWER_ICON_OFFSET = 270;
+const DRAGON_GROUP_OFFSET = 60;
+
+type TimerObjectiveBarProps = {
   gameState: GameState;
 };
 
@@ -64,8 +70,8 @@ function VoidgrubCount({ count, side, }: { count: number, side: 'blue' | 'red'; 
         position: 'absolute',
         top: '5px',
 
-        left: side === 'blue' ? 'calc(50% - 280px)' : 'auto',
-        right: side === 'red' ? 'calc(50% - 280px)' : 'auto',
+        left: side === 'blue' ? `calc(50% - ${TOWER_ICON_OFFSET}px)` : 'auto',
+        right: side === 'red' ? `calc(50% - ${TOWER_ICON_OFFSET}px)` : 'auto',
 
         display: 'flex',
         alignItems: 'center',
@@ -114,15 +120,15 @@ function VoidgrubCount({ count, side, }: { count: number, side: 'blue' | 'red'; 
 }
 
 
-export default function TimerObjectiveBar({ gameState }: timerObjectiveBarProps) {
+export default function TimerObjectiveBar({ gameState }: TimerObjectiveBarProps) {
   const { blueTeam, redTeam, gameTime } = gameState;
 
   return (
     <div
       style={{
         width: '100%',
-        maxWidth: '1237px',
-        height: '36px',
+        maxWidth: `${SCOREBOARD_WIDTH}px`,
+        height: `${TIMER_OBJECTIVE_BAR_HEIGHT}px`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -151,21 +157,44 @@ export default function TimerObjectiveBar({ gameState }: timerObjectiveBarProps)
       {/* 블루팀 유충 수 */}
       <VoidgrubCount count={blueTeam.voidgrubs} side="blue" />
 
-      {/* 중앙 시간 + 드래곤 */}
+      {/* 블루팀 드래곤 */}
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '50px',
+          position: 'absolute',
+          left: `calc(50% - ${DRAGON_GROUP_OFFSET}px)`,
+          top: '50%',
+          transform: 'translate(-100%, -50%)',
         }}
       >
-        {/* 블루팀이 먹은 드래곤은 시간 왼쪽 */}
         <DragonIcons dragons={blueTeam.dragons} side="blue" />
+      </div>
+
+      {/* 중앙 게임 시간 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
         <GameTimer seconds={gameTime} />
-        {/* 레드팀이 먹은 드래곤은 시간 오른쪽 */}
+      </div>
+
+      {/* 레드팀 드래곤 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: `calc(50% + ${DRAGON_GROUP_OFFSET}px)`,
+          top: '50%',
+          transform: 'translate(0, -50%)',
+        }}
+      >
         <DragonIcons dragons={redTeam.dragons} side="red" />
       </div>
+
+
+      {/* 레드팀 유충 수 */}
       <VoidgrubCount count={redTeam.voidgrubs} side="red" />
     </div>
   );

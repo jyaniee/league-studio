@@ -128,12 +128,12 @@ export default function TeamStats({ towers, gold, goldDiff, side }: TeamStatsPro
 
   return (
     <div style={{ 
+      width: '210px',
       display: 'flex', 
       alignItems: 'center', 
       gap: '24px', 
-      flex: 1, 
       justifyContent: isRed ? 'flex-end' : 'flex-start', 
-      padding: isRed ? '0 16px 0 0' : '0 0 0 16px' 
+      boxSizing: 'border-box',
     }}>
       {isRed ? renderRedStats() : renderBlueStats()}
     </div>

@@ -64,15 +64,15 @@ function VoidgrubCount({ count, side, }: { count: number, side: 'blue' | 'red'; 
         position: 'absolute',
         top: '5px',
 
-        left: side === 'blue' ? 'calc(50% - 350px)' : 'auto',
-        right: side === 'red' ? 'calc(50% - 350px)' : 'auto',
+        left: side === 'blue' ? 'calc(50% - 280px)' : 'auto',
+        right: side === 'red' ? 'calc(50% - 280px)' : 'auto',
 
         display: 'flex',
         alignItems: 'center',
         gap: '6px',
 
         color: 'rgba(255, 255, 255, 0.75)',
-        fontSize: '20px',
+        fontSize: '18px',
         fontWeight: 500,
       }}
     >
@@ -82,8 +82,8 @@ function VoidgrubCount({ count, side, }: { count: number, side: 'blue' | 'red'; 
           src={voidgrubIcon}
           alt="voidgrub"
           style={{
-            width: '22px',
-            height: '22px',
+            width: '20px',
+            height: '20px',
             objectFit: 'contain',
             filter: 'grayscale(1) brightness(2)',
             opacity: 0.9,
@@ -100,8 +100,8 @@ function VoidgrubCount({ count, side, }: { count: number, side: 'blue' | 'red'; 
           src={voidgrubIcon}
           alt="voidgrub"
           style={{
-            width: '22px',
-            height: '22px',
+            width: '20px',
+            height: '20px',
             objectFit: 'contain',
             filter: 'grayscale(1) brightness(2)',
             opacity: 0.9,

@@ -1,10 +1,10 @@
 import React from 'react';
 
-type GametimerProps = {
+type GameTimerProps = {
   seconds?: number;
-}
+};
 
-export default function GameTimer({ seconds = 0 }: GametimerProps) {
+export default function GameTimer({ seconds = 0 }: GameTimerProps) {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
 
@@ -12,8 +12,17 @@ export default function GameTimer({ seconds = 0 }: GametimerProps) {
   const formattedSeconds = String(remainingSeconds).padStart(2, '0');
 
   return (
-    <span style={{ color: '#E2E8F0', fontWeight: 'bold' }}>
-      ⏱️ {formattedMinutes}:{formattedSeconds}
+    <span
+      style={{
+        fontSize: '18px',
+        color: '#FFFFFF',
+        fontWeight: '500',
+        letterSpacing: '1px',
+        minWidth: '54px',
+        textAlign: 'center',
+      }}
+    >
+      {formattedMinutes}:{formattedSeconds}
     </span>
   );
 }

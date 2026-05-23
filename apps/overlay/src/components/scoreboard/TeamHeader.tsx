@@ -4,7 +4,7 @@ type Side = "blue" | "red";
 
 type TeamHeaderProps = {
   name: string;
-  logo: string;
+  logo?: string;
   side: Side;
 };
 

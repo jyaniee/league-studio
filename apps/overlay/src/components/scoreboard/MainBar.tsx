@@ -1,28 +1,39 @@
 import React from 'react';
+import type { GameState } from '@league-studio/shared-types';
+
 import TeamHeader from './TeamHeader';
 import TeamStats from './TeamStats';
 import CenterScore from './CenterScore';
 
-type TeamData = {
-  name: string;
-  logo: string;
-  kills: number;
-  towers: number;
-  gold: string;
-  goldDiff: string;
-};
-
-type GameData = {
-  blueTeam: TeamData;
-  redTeam: TeamData;
-};
-
 type MainBarProps = {
-  gameData: GameData;
-  updateKill?: (team: 'blueTeam'| 'redTeam', delta: number) => void;
+  gameState: GameState;
 };
 
-export default function MainBar({ gameData, updateKill }: MainBarProps) {
+function formatGold(gold?: number): string {
+  if (gold === undefined){
+    return '-';
+  }
+  return `${(gold / 1000).toFixed(1)}K`;
+}
+
+function formatGoldDiff(teamGold?: number, opponentGold?: number): string {
+  if (teamGold === undefined || opponentGold === undefined) {
+    return '-';
+  }
+
+  const diff = teamGold - opponentGold;
+
+  if (diff === 0){
+    return '0';
+  }
+  
+  const sign = diff > 0 ? '+' : '-';
+  return `${sign}${(Math.abs(diff) / 1000).toFixed(1)}K`;
+
+}
+export default function MainBar({ gameState }: MainBarProps) {
+  const { blueTeam, redTeam } = gameState;
+
   return (
     <div style={{ 
       width: '100%', 
@@ -41,11 +52,13 @@ export default function MainBar({ gameData, updateKill }: MainBarProps) {
       fontFamily: '"Sora", sans-serif'
     }}>
       
-      {/* 🔵 블루팀 영역 */}
+      {/* 블루팀 영역 */}
       <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-        <TeamHeader name={gameData.blueTeam.name} logo={gameData.blueTeam.logo} side="blue" />
-        
-
+        <TeamHeader 
+          name={blueTeam.name} 
+          logo={blueTeam.logoUrl} 
+          side="blue"
+        />
         <div style={{ 
           width: '3.5px', 
           height: '59px', 
@@ -54,19 +67,30 @@ export default function MainBar({ gameData, updateKill }: MainBarProps) {
           marginRight: '20px'       
         }}></div>
         
-        <TeamStats kills={gameData.blueTeam.kills} towers={gameData.blueTeam.towers} gold={gameData.blueTeam.gold} goldDiff={gameData.blueTeam.goldDiff} side="blue" />
+        <TeamStats
+           kills={blueTeam.kills} 
+           towers={blueTeam.towers} 
+           gold={formatGold(blueTeam.globalGold)} 
+           goldDiff={formatGoldDiff(blueTeam.globalGold, redTeam.globalGold)} 
+           side="blue" 
+        />
       </div>
       
-     {/* 🏢 중앙 점수판 영역 */}
+     {/* 중앙 점수판 영역 */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <CenterScore blueKills={gameData.blueTeam.kills} redKills={gameData.redTeam.kills} />
+        <CenterScore blueKills={blueTeam.kills} redKills={redTeam.kills} />
       </div>
       
-      {/* 🔴 레드팀 영역 */}
+      {/* 레드팀 영역 */}
       <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-        <TeamStats kills={gameData.redTeam.kills} towers={gameData.redTeam.towers} gold={gameData.redTeam.gold} goldDiff={gameData.redTeam.goldDiff} side="red" />
+        <TeamStats 
+          kills={redTeam.kills} 
+          towers={redTeam.towers} 
+          gold={formatGold(redTeam.globalGold)} 
+          goldDiff={formatGoldDiff(redTeam.globalGold, blueTeam.globalGold)} 
+          side="red" 
+        />
         
-
         <div style={{ 
           width: '3.5px', 
           height: '59px', 
@@ -75,7 +99,12 @@ export default function MainBar({ gameData, updateKill }: MainBarProps) {
           marginRight: '40px'
         }}></div>
         
-        <TeamHeader name={gameData.redTeam.name} logo={gameData.redTeam.logo} side="red" />
+        <TeamHeader 
+          name={redTeam.name} 
+          logo={redTeam.logoUrl} 
+          side="red" 
+        />
+
       </div>
 
     </div>

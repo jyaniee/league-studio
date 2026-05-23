@@ -1,10 +1,17 @@
-import ObjectiveTimerPanel from "./ObjectiveTimerPanel";
-import { mockObjectiveTimers } from "./ObjectiveTimerData";
+import type { GameState } from "@league-studio/shared-types"
 
-export default function ObjectiveTimerOverlay() {
+import ObjectiveTimerPanel from "./ObjectiveTimerPanel";
+import { getObjectiveTimersFromGameState } from "./ObjectiveTimerData";
+
+type ObjectiveTimerOverlayProps = {
+    gameState: GameState;
+}
+
+export default function ObjectiveTimerOverlay({ gameState }: ObjectiveTimerOverlayProps) {
+    const objectiveTimers = getObjectiveTimersFromGameState(gameState);
     return (
         <>
-            {mockObjectiveTimers.map((timer) => (
+            {objectiveTimers.map((timer) => (
                 <ObjectiveTimerPanel key={timer.id} timer={timer} />
             ))}
         </>

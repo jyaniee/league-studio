@@ -38,6 +38,8 @@ export interface ObjectiveTimer {
   lastKillTimeSeconds?: number;   // 옵젝이 마지막으로 처치된 시간(초)
   nextSpawnTimeSeconds?: number;  // 다음 등장 또는 재등장 예정 시간(초)
   remainingSeconds?: number;  // 옵젝이 생성/재생성되기까지 남은 시간(초)
+
+  dragonType?: DragonType; // Dragon timer에서 표시할 드래곤 종류, dragon objective에만 사용
 }
 
 
@@ -57,7 +59,7 @@ export interface GameObjectives {
   elder: ObjectiveTimer;
   baron: ObjectiveTimer;
   herald: ObjectiveTimer;
-  voidgrub: ObjectiveTimer;
+  voidgrubs: ObjectiveTimer;
 }
 
 export interface TeamState {
@@ -82,7 +84,7 @@ export interface GameState {
   blueTeam: TeamState;
   redTeam: TeamState;
 
-  objectives?: GameObjectives;
+  objectives: GameObjectives;
 
   source: DataSource;
 

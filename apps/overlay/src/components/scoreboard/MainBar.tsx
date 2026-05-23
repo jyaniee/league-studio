@@ -16,21 +16,20 @@ function formatGold(gold?: number): string {
   return `${(gold / 1000).toFixed(1)}K`;
 }
 
-function formatGoldDiff(teamGold?: number, opponentGold?: number): string {
+function formatGoldLead(teamGold?: number, opponentGold?: number): string {
   if (teamGold === undefined || opponentGold === undefined) {
-    return '-';
+    return '';
   }
 
   const diff = teamGold - opponentGold;
 
-  if (diff === 0){
-    return '0';
+  if (diff <= 0) {
+    return '';
   }
-  
-  const sign = diff > 0 ? '+' : '-';
-  return `${sign}${(Math.abs(diff) / 1000).toFixed(1)}K`;
 
+  return `+${(diff / 1000).toFixed(1)}K`;
 }
+
 export default function MainBar({ gameState }: MainBarProps) {
   const { blueTeam, redTeam } = gameState;
 
@@ -68,10 +67,9 @@ export default function MainBar({ gameState }: MainBarProps) {
         }}></div>
         
         <TeamStats
-           kills={blueTeam.kills} 
            towers={blueTeam.towers} 
            gold={formatGold(blueTeam.globalGold)} 
-           goldDiff={formatGoldDiff(blueTeam.globalGold, redTeam.globalGold)} 
+           goldDiff={formatGoldLead(blueTeam.globalGold, redTeam.globalGold)} 
            side="blue" 
         />
       </div>
@@ -84,10 +82,9 @@ export default function MainBar({ gameState }: MainBarProps) {
       {/* 레드팀 영역 */}
       <div style={{ flex: '1 1 0%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
         <TeamStats 
-          kills={redTeam.kills} 
           towers={redTeam.towers} 
           gold={formatGold(redTeam.globalGold)} 
-          goldDiff={formatGoldDiff(redTeam.globalGold, blueTeam.globalGold)} 
+          goldDiff={formatGoldLead(redTeam.globalGold, blueTeam.globalGold)} 
           side="red" 
         />
         

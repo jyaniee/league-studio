@@ -27,7 +27,7 @@ const initialGameState: GameState = {
     towers: 4,
     dragons: ['cloud', 'infernal'],
     voidgrubs: 3,
-    globalGold: 45200,
+    globalGold: 12500,
   },
 
   redTeam: {
@@ -38,7 +38,7 @@ const initialGameState: GameState = {
     towers: 2,
     dragons: ['mountain'],
     voidgrubs: 0,
-    globalGold: 43100,
+    globalGold: 12100,
   },
 
   objectives: {

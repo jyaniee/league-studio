@@ -4,7 +4,7 @@ type Side = "blue" | "red";
 
 type TeamHeaderProps = {
   name: string;
-  logo: string;
+  logo?: string;
   side: Side;
 };
 
@@ -21,8 +21,8 @@ export default function TeamHeader({ name, logo, side }: TeamHeaderProps) {
       justifyContent: isRed ? 'flex-end' : 'flex-start' 
     }}>
 
-      {/* 🔵 블루팀 렌더링 순서: [로고] -> [팀명] */}
-      {!isRed && (
+      {/* 블루팀 렌더링 순서: [로고] -> [팀명] */}
+      {!isRed && logo &&(
         <img 
           src={logo} 
           style={{ width: '55px', height: '55px', objectFit: 'contain', filter: 'grayscale(1) brightness(0) invert(1)' }}
@@ -31,10 +31,10 @@ export default function TeamHeader({ name, logo, side }: TeamHeaderProps) {
       )}
       {!isRed && <span style={{ fontSize: '46px', fontWeight: '800', color: '#FFF', fontFamily: '"Sora", sans-serif' }}>{name}</span>}
 
-      {/* 🔴 레드팀 렌더링 순서: [팀명] -> [로고] */}
+      {/* 레드팀 렌더링 순서: [팀명] -> [로고] */}
       {isRed && <span style={{ fontSize: '46px', fontWeight: '800', color: '#FFF', fontFamily: '"Sora", sans-serif' }}>{name}</span>}
-      {isRed && (
-        <img 
+      {isRed && logo &&(
+        <img
           src={logo} 
           style={{ maxWidth: '71px', height: '45px', objectFit: 'contain', filter: 'grayscale(1) brightness(0) invert(1)' }} 
           alt={name} 

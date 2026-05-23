@@ -6,13 +6,11 @@ type Side = "blueTeam" | "redTeam";
 type CenterScoreProps = {
   blueKills: number;
   redKills: number;
-  updatekill?: (team: Side, amount: number) => void;
 };
 
 export default function CenterScore({
   blueKills,
   redKills,
-  updatekill, 
 }: CenterScoreProps) { 
   
   return (
@@ -45,7 +43,7 @@ export default function CenterScore({
 
       {/* 레드팀 킬 스코어 */}
       <span style={{ fontSize: '40px', fontWeight: '500', color: '#FFF' }}>
-        0
+        {redKills}
       </span>
       
     </div>

@@ -4,6 +4,8 @@ interface ObjectiveTimerPanelProps {
     timer: ObjectiveTimerViewModel;
 }
 
+const PANEL_WIDTH = 156;
+
 export default function ObjectiveTimerPanel({ timer }: ObjectiveTimerPanelProps) {
     const isLeft = timer.position === "left";
 
@@ -12,10 +14,10 @@ export default function ObjectiveTimerPanel({ timer }: ObjectiveTimerPanelProps)
         style={{
             position: "fixed",
             top: 0,
-            left: isLeft ? 0 : "auto",
-            right: isLeft ? "auto" : 0,
-            width: "168px",
-            height: "90px",
+            left: isLeft ? `${timer.slotIndex * PANEL_WIDTH}px` : "auto",
+            right: isLeft ? "auto" : `${timer.slotIndex * PANEL_WIDTH}px`,
+            width: `${PANEL_WIDTH}px`,
+            height: "72px",
             background: "rgba(120, 120, 120, 0.55)",
             display: "flex",
             alignItems: "center",

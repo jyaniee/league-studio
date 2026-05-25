@@ -1,6 +1,9 @@
 import type { GameState } from "@league-studio/shared-types";
 import { calculateObjectives } from "./objectiveTimers";
 
+const ELDER_RESPAWN_TIME = 6 * 60;
+const DRAGONS_REQUIRED_FOR_SOUL = 4;
+
 if (process.env.ALLOW_INSECURE_LOCAL_TLS === "true"){
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // 롤 클라이언트 api 에 인증서 문제 때문에 node에서 막힐 수 있음. 인증서 검사를 끄는 코드
 }
@@ -17,6 +20,9 @@ interface LiveClientEvent {
   EventTime: number;
   KillerName?: string;
   VictimName?: string;
+  KillerTeam?: "ORDER" | "CHAOS";
+  DragonType?: string;
+
 }
 
 interface LiveClientEventData {
@@ -24,9 +30,14 @@ interface LiveClientEventData {
 }
 
 interface LiveClientPlayer {
-  team: "ORDER" | "CHAOS" | string;
+  summonerName: string;
+  championName: string;
+  team: "ORDER" | "CHAOS";
   scores?: {
     kills?: number;
+    deaths?: number;
+    assists?: number;
+    creepScore?: number;
   };
 }
 //api 호출해서 JSON 으로 바꿔주는 공통 함수
@@ -38,6 +49,26 @@ async function fetchJson<T>(url: string): Promise<T> {
   }
 
   return response.json() as Promise<T>;
+}
+
+function addKillerTeamToEvents(
+  events: LiveClientEvent[],
+  players: LiveClientPlayer[],
+): LiveClientEvent[] {
+  return events.map((event) => {
+    if (!event.KillerName) {
+      return event;
+    }
+
+    const killer = players.find(
+      (player) => player.summonerName === event.KillerName,
+    );
+
+    return {
+      ...event,
+      KillerTeam: killer?.team,
+    };
+  });
 }
 //팀 킬 수 게산 함수
 function sumTeamKills(players: LiveClientPlayer[], team: "ORDER" | "CHAOS") {
@@ -54,16 +85,37 @@ export async function getLiveClientGameState(): Promise<GameState> {
   ]);
 
   const gameTime = gameStats.gameTime;
-  const events = eventData.Events ?? [];//왼쪽 값이 null 또는 undefined 이면 오른쪽 값을 사용
+  const events = addKillerTeamToEvents(eventData.Events ?? [], players);
 //api 데이터를 gamestate 구조로 바꿔서 반환
   return {
-    phase: "in-game",
-    gameTime: Math.floor(gameTime),
-    blueTeamName: "BLUE",
-    redTeamName: "RED",
-    blueKills: sumTeamKills(players, "ORDER"),
-    redKills: sumTeamKills(players, "CHAOS"),
-    objectives: calculateObjectives(gameTime, events),
-    source: "live-client-api",
-  };
+  phase: "in-game",
+  gameTime: Math.floor(gameTime),
+
+  blueTeam: {
+    side: "blue",
+    name: "BLUE",
+    logoUrl: undefined,
+    kills: sumTeamKills(players, "ORDER"),
+    globalGold: undefined,
+    towers: 0,
+    dragons: [],
+    voidgrubs: 0,
+  },
+
+  redTeam: {
+    side: "red",
+    name: "RED",
+    logoUrl: undefined,
+    kills: sumTeamKills(players, "CHAOS"),
+    globalGold: undefined,
+    towers: 0,
+    dragons: [],
+    voidgrubs: 0,
+  },
+
+  objectives: calculateObjectives(gameTime, events),
+
+  source: "live-client-api",
+  updatedAt: new Date().toISOString(),
+};
 }

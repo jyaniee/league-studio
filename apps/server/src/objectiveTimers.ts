@@ -1,10 +1,8 @@
 import type { GameObjectives, ObjectiveTimer } from "@league-studio/shared-types";
-
-const FIRST_DRAGON_SPAWN = 5 * 60;
-const DRAGON_RESPAWN = 5 * 60;
-
-const FIRST_BARON_SPAWN = 20 * 60;
-const BARON_RESPAWN = 6 * 60;
+import {
+  OBJECTIVE_FIRST_SPAWN_TIMES,
+  OBJECTIVE_RESPAWN_TIMES,
+} from "@league-studio/shared-types";
 
 interface LiveClientEvent {
   EventID: number;
@@ -19,7 +17,8 @@ interface CalculateObjectiveTimerParams {
   events: LiveClientEvent[];
   eventName: string;
   firstSpawnTime: number;
-  respawnTime: number;
+  respawnTime?: number;
+  canRespawn: boolean;
 }
 //초 단위 숫자를 분:초 형태로 바꾸는 함수임.
 export function formatTime(seconds: number): string {
@@ -42,45 +41,73 @@ function calculateObjectiveTimer({
   eventName,
   firstSpawnTime,
   respawnTime,
+  canRespawn,
 }: CalculateObjectiveTimerParams): ObjectiveTimer {
   const killEvents = findEvents(events, eventName); // findevnet 로 eventName인 것을 남김
-  const lastKillEvent = killEvents[killEvents.length - 1]; // 배열에서 마지막 값을 가져옴.
-  const nextSpawnTime = lastKillEvent
-    ? lastKillEvent.EventTime + respawnTime
-    : firstSpawnTime;
-  const remainingSeconds = nextSpawnTime - gameTime;
-  const isAlive = remainingSeconds <= 0;
+  const lastKillEvent = killEvents[killEvents.length-1];
+
+  const nextSpawnTime = 
+  lastKillEvent && respawnTime !== undefined
+  ? lastKillEvent.EventTime + respawnTime
+  : firstSpawnTime;
+
+  const remainingSeconds = Math.max(0, Math.floor(nextSpawnTime - gameTime));
+  const isAlive = gameTime >= nextSpawnTime;
 
   return {
-    status: isAlive ? "LIVE" : "대기 중",
+    status: isAlive ? "alive" : "waiting",
     isAlive,
-    lastKillTime: lastKillEvent
-      ? formatTime(lastKillEvent.EventTime)
-      : "아직 처치 안 됨",
-    nextSpawnTime: formatTime(nextSpawnTime),
-    remainingTime: isAlive ? "생성됨" : formatTime(remainingSeconds),
-    rawRemainingSeconds: Math.max(0, Math.floor(remainingSeconds)),
+    canRespawn,
+    spawnTimeSeconds: firstSpawnTime,
+    lastKillTimeSeconds: lastKillEvent?.EventTime,
+    nextSpawnTimeSeconds: nextSpawnTime,
+    remainingSeconds,
   };
 }
 
 export function calculateObjectives(
-  gameTime: number, // 게임 시간 받아오기
-  events: LiveClientEvent[] // event 목록 받아오기
+  gameTime: number,
+  events: LiveClientEvent[],
 ): GameObjectives {
   return {
     dragon: calculateObjectiveTimer({
       gameTime,
       events,
       eventName: "DragonKill",
-      firstSpawnTime: FIRST_DRAGON_SPAWN,
-      respawnTime: DRAGON_RESPAWN,
+      firstSpawnTime: OBJECTIVE_FIRST_SPAWN_TIMES.dragon,
+      respawnTime: OBJECTIVE_RESPAWN_TIMES.dragon,
+      canRespawn: true,
     }),
+
+    elder: {
+      status: "inactive",
+      isAlive: false,
+      canRespawn: true,
+    },
+
     baron: calculateObjectiveTimer({
       gameTime,
       events,
       eventName: "BaronKill",
-      firstSpawnTime: FIRST_BARON_SPAWN,
-      respawnTime: BARON_RESPAWN,
+      firstSpawnTime: OBJECTIVE_FIRST_SPAWN_TIMES.baron,
+      respawnTime: OBJECTIVE_RESPAWN_TIMES.baron,
+      canRespawn: true,
+    }),
+
+    herald: calculateObjectiveTimer({
+      gameTime,
+      events,
+      eventName: "HeraldKill",
+      firstSpawnTime: OBJECTIVE_FIRST_SPAWN_TIMES.herald,
+      canRespawn: false,
+    }),
+
+    voidgrubs: calculateObjectiveTimer({
+      gameTime,
+      events,
+      eventName: "HordeKill",
+      firstSpawnTime: OBJECTIVE_FIRST_SPAWN_TIMES.voidgrubs,
+      canRespawn: false,
     }),
   };
 }

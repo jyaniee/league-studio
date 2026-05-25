@@ -5,7 +5,7 @@ import {
 } from "@league-studio/shared-types";
 
 const VOIDGRUB_TOTAL_COUNT = 3;
-const ELDER_RESPAWN_TIME = 6 * 60;
+
 const DRAGONS_REQUIRED_FOR_SOUL = 4;
 
 interface LiveClientEvent {
@@ -139,11 +139,12 @@ function calculateElderTimer(
 
   const lastElderKillEvent = elderKillEvents[elderKillEvents.length - 1];
 
-  const firstElderSpawnTime = dragonSoulTime + ELDER_RESPAWN_TIME;
+  const firstElderSpawnTime =
+  dragonSoulTime + OBJECTIVE_RESPAWN_TIMES.elder;
 
   const nextSpawnTime =
     lastElderKillEvent !== undefined
-      ? lastElderKillEvent.EventTime + ELDER_RESPAWN_TIME
+      ? lastElderKillEvent.EventTime + OBJECTIVE_RESPAWN_TIMES.elder
       : firstElderSpawnTime;
 
   const remainingSeconds = Math.max(0, Math.floor(nextSpawnTime - gameTime));

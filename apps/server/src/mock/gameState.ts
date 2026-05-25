@@ -21,14 +21,35 @@ export function getMockGameState(): GameState {
     },
   ];
 
-  return {
+   return {
     phase: "in-game",
     gameTime: time,
-    blueTeamName: "BLUE",
-    redTeamName: "RED",
-    blueKills: Math.floor(time / 5),
-    redKills: Math.floor(time / 7),
+
+    blueTeam: {
+      side: "blue",
+      name: "BLUE",
+      logoUrl: undefined,
+      kills: Math.floor(time / 5),
+      globalGold: undefined,
+      towers: 0,
+      dragons: [],
+      voidgrubs: 0,
+    },
+
+    redTeam: {
+      side: "red",
+      name: "RED",
+      logoUrl: undefined,
+      kills: Math.floor(time / 7),
+      globalGold: undefined,
+      towers: 0,
+      dragons: [],
+      voidgrubs: 0,
+    },
+
     objectives: calculateObjectives(time, mockEvents),
+
     source: "mock",
+    updatedAt: new Date().toISOString(),
   };
 }

@@ -86,4 +86,5 @@ export async function getLiveClientGameState(): Promise<GameState> {
 
   source: "live-client-api",
   updatedAt: new Date().toISOString(),
+};
 }

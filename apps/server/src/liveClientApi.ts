@@ -57,13 +57,33 @@ export async function getLiveClientGameState(): Promise<GameState> {
   const events = eventData.Events ?? [];//왼쪽 값이 null 또는 undefined 이면 오른쪽 값을 사용
 //api 데이터를 gamestate 구조로 바꿔서 반환
   return {
-    phase: "in-game",
-    gameTime: Math.floor(gameTime),
-    blueTeamName: "BLUE",
-    redTeamName: "RED",
-    blueKills: sumTeamKills(players, "ORDER"),
-    redKills: sumTeamKills(players, "CHAOS"),
-    objectives: calculateObjectives(gameTime, events),
-    source: "live-client-api",
-  };
+  phase: "in-game",
+  gameTime: Math.floor(gameTime),
+
+  blueTeam: {
+    side: "blue",
+    name: "BLUE",
+    logoUrl: undefined,
+    kills: sumTeamKills(players, "ORDER"),
+    globalGold: undefined,
+    towers: 0,
+    dragons: [],
+    voidgrubs: 0,
+  },
+
+  redTeam: {
+    side: "red",
+    name: "RED",
+    logoUrl: undefined,
+    kills: sumTeamKills(players, "CHAOS"),
+    globalGold: undefined,
+    towers: 0,
+    dragons: [],
+    voidgrubs: 0,
+  },
+
+  objectives: calculateObjectives(gameTime, events),
+
+  source: "live-client-api",
+  updatedAt: new Date().toISOString(),
 }

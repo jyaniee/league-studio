@@ -1,4 +1,4 @@
-import type { GameState } from "@league-studio/shared-types";
+import type { DragonType, GameState } from "@league-studio/shared-types";
 import { calculateObjectives } from "./objectiveTimers";
 
 const ELDER_RESPAWN_TIME = 6 * 60;
@@ -77,6 +77,35 @@ function sumTeamKills(players: LiveClientPlayer[], team: "ORDER" | "CHAOS") {
     .reduce((sum, player) => sum + (player.scores?.kills ?? 0), 0);// scores 값이 잇으면 kills릂 가져오고 없으면 0을 사용( 원래는 undefined 가 됨)
 }
 
+// 팀별 유충 처치 수
+function countTeamVoidgrubs(events: LiveClientEvent[], team: "ORDER" | "CHAOS"): number {
+  return events.filter(e => e.EventName === "HordeKill" && e.KillerTeam === team).length;
+}
+
+// 팀별 드래곤 목록
+function mapDragonType(dragonType?: string): DragonType {
+  const map: Record<string, DragonType> = {
+    "Cloud": "cloud",
+    "Infernal": "infernal",
+    "Mountain": "mountain",
+    "Ocean": "ocean",
+    "Hextech": "hextech",
+    "Chemtech": "chemtech",
+    "Elder": "elder",
+  };
+  return map[dragonType ?? ""] ?? "hextech";
+}
+
+function getTeamDragons(events: LiveClientEvent[], team: "ORDER" | "CHAOS"): DragonType[] {
+  return events.filter(e => e.EventName === "DragonKill" && e.KillerTeam === team 
+    && e.DragonType !== "Elder").sort((a, b) => a.EventTime - b.EventTime).map(e => mapDragonType(e.DragonType));
+}
+
+// 팀별 타워 파괴 수
+function countTeamTowers(events: LiveClientEvent[], team: "ORDER" | "CHAOS"): number {
+  return events.filter(e => e.EventName === "TurretKilled" && e.KillerTeam === team).length;
+}
+
 export async function getLiveClientGameState(): Promise<GameState> {
   const [gameStats, eventData, players] = await Promise.all([
     fetchJson<LiveClientGameStats>(`${API_BASE_URL}/gamestats`),
@@ -97,9 +126,9 @@ export async function getLiveClientGameState(): Promise<GameState> {
     logoUrl: undefined,
     kills: sumTeamKills(players, "ORDER"),
     globalGold: undefined,
-    towers: 0,
-    dragons: [],
-    voidgrubs: 0,
+    towers: countTeamTowers(events, "ORDER"),
+    dragons: getTeamDragons(events, "ORDER"),
+    voidgrubs: countTeamVoidgrubs(events, "ORDER"),
   },
 
   redTeam: {
@@ -108,9 +137,9 @@ export async function getLiveClientGameState(): Promise<GameState> {
     logoUrl: undefined,
     kills: sumTeamKills(players, "CHAOS"),
     globalGold: undefined,
-    towers: 0,
-    dragons: [],
-    voidgrubs: 0,
+    towers: countTeamTowers(events, "CHAOS"),
+    dragons: getTeamDragons(events, "CHAOS"),
+    voidgrubs: countTeamVoidgrubs(events, "CHAOS"),
   },
 
   objectives: calculateObjectives(gameTime, events),

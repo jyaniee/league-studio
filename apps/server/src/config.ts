@@ -8,6 +8,8 @@ loadEnv({ path: resolve(serverRoot, ".env") });
 const DEFAULT_INTERVAL_MS = 1000;
 const DEFAULT_WS_PORT = 8081;
 
+const DEFAULT_AGENT_INGEST_PORT = 3001;
+
 function parsePositiveInt(value: string | undefined, fallback: number): number {
   if (value === undefined) return fallback;
   const parsed = Number.parseInt(value, 10);
@@ -20,3 +22,9 @@ export const gameStateIntervalMs = parsePositiveInt(
 );
 
 export const wsPort = parsePositiveInt(process.env.WS_PORT, DEFAULT_WS_PORT);
+
+export const agentIngestPort = parsePositiveInt(
+  process.env.AGENT_INGEST_PORT,
+  DEFAULT_AGENT_INGEST_PORT
+  
+);

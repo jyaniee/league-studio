@@ -7,6 +7,7 @@ loadEnv({ path: resolve(serverRoot, ".env") });
 
 const DEFAULT_INTERVAL_MS = 1000;
 const DEFAULT_WS_PORT = 8081;
+const DEFAULT_HTTP_PORT = 3000;
 
 const DEFAULT_AGENT_INGEST_PORT = 3001;
 
@@ -28,3 +29,4 @@ export const agentIngestPort = parsePositiveInt(
   DEFAULT_AGENT_INGEST_PORT
   
 );
+export const httpPort = parsePositiveInt(process.env.HTTP_PORT, DEFAULT_HTTP_PORT);

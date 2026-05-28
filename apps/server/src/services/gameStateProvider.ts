@@ -1,16 +1,16 @@
 import type { GameState } from "@league-studio/shared-types";
-import { getMockGameState } from "./mock/gameState";
-import { getLiveClientGameState } from "./liveClientApi";
+import { getMockGameState } from "../mock/gameState";
+import { getLiveClientGameState } from "./gameStateService";
 
 /**
- * Returns the current game snapshot for WebSocket broadcast.
- * Data team: replace mock branch with real API + mapper when ready.
+ * WebSocket/HTTP에 제공할 현재 GameState 스냅샷.
+ * USE_MOCK=false일 때 Live Client API를 사용하고, 실패 시 mock으로 fallback한다.
  */
 export async function getCurrentGameState(): Promise<GameState | null> {
   if (process.env.USE_MOCK !== "false") {
     return getMockGameState();
   }
-  // Real API implementation will be wired here (see docs/ws-contract.md).
+
   try {
     return await getLiveClientGameState();
   } catch (error) {

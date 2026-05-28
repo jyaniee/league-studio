@@ -1,5 +1,5 @@
 import type { GameState } from "@league-studio/shared-types";
-import { calculateObjectives } from "../objectiveTimers";
+import { calculateObjectives } from "../calculators/objectiveTimers";
 //가짜 데이터 파일 게임이 안 켜져 있거나 API 연결이 실패했을 때 쓰는 가짜 데이터 파일
 let time = 0;
 

@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { httpPort } from "./config";
-import { getCurrentGameState } from "./gameStateProvider";
+import { getCurrentGameState } from "./services/gameStateProvider";
 
 // 임시 HTTP 서버: 현재 GameState를 JSON으로 확인하기 위한 검증용 엔드포인트.
 // WebSocket(8081)과 별도 포트(3000)에서 동작하며, 기존 코드에 영향을 주지 않는다.

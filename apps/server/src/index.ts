@@ -1,7 +1,7 @@
 import "./httpServer";
 import { WebSocketServer, type WebSocket } from "ws";
 import { gameStateIntervalMs, wsPort } from "./config";
-import { getCurrentGameState } from "./gameStateProvider";
+import { getCurrentGameState } from "./services/gameStateProvider";
 
 const wss = new WebSocketServer({ port: wsPort });
 

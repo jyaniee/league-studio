@@ -1,7 +1,8 @@
 import "./httpServer";
 import { WebSocketServer, type WebSocket } from "ws";
-import { gameStateIntervalMs, wsPort } from "./config";
+import { agentIngestPort, gameStateIntervalMs, wsPort } from "./config";
 import { getCurrentGameState } from "./services/gameStateProvider";
+import { startAgentIngestServer } from "./agentIngestServer";
 
 const wss = new WebSocketServer({ port: wsPort });
 
@@ -52,5 +53,7 @@ wss.on("connection", (socket) => {
     console.log("Client disconnected");
   });
 });
+
+startAgentIngestServer(agentIngestPort);
 
 console.log(`WebSocket server running on ws://localhost:${wsPort}`);

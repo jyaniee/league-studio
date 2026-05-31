@@ -1,7 +1,9 @@
 import "./httpServer";
 import { WebSocketServer, type WebSocket } from "ws";
-import { gameStateIntervalMs, wsPort } from "./config";
+import { gameStateIntervalMs, wsHeartbeatIntervalMs, wsPort } from "./config";
 import { getCurrentGameState } from "./services/gameStateProvider";
+
+type HeartbeatSocket = WebSocket & { isAlive: boolean };
 
 const wss = new WebSocketServer({ port: wsPort });
 
@@ -33,22 +35,50 @@ function broadcastCachedState(): void {
   }
 }
 
+function startHeartbeat(server: WebSocketServer, intervalMs: number): void {
+  const heartbeatInterval = setInterval(() => {
+    for (const socket of server.clients) {
+      const ws = socket as HeartbeatSocket;
+
+      if (ws.isAlive === false) {
+        ws.terminate();
+        continue;
+      }
+
+      ws.isAlive = false;
+      ws.ping();
+    }
+  }, intervalMs);
+
+  server.on("close", () => {
+    clearInterval(heartbeatInterval);
+  });
+}
+
 fetchLoop();
-const broadcastInterval = setInterval(broadcastCachedState, gameStateIntervalMs);
+setInterval(broadcastCachedState, gameStateIntervalMs);
+startHeartbeat(wss, wsHeartbeatIntervalMs);
 
 wss.on("connection", (socket) => {
+  const ws = socket as HeartbeatSocket;
+  ws.isAlive = true;
+
   console.log("Client connected");
+
+  ws.on("pong", () => {
+    ws.isAlive = true;
+  });
 
   // 연결 즉시 캐시된 데이터를 전송하여 첫 화면 대기를 제거한다.
   if (cachedGameState !== null) {
-    socket.send(cachedGameState);
+    ws.send(cachedGameState);
   }
 
-  socket.on("error", (error) => {
+  ws.on("error", (error) => {
     console.error("WebSocket error:", error);
   });
 
-  socket.on("close", () => {
+  ws.on("close", () => {
     console.log("Client disconnected");
   });
 });

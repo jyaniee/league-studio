@@ -2,10 +2,9 @@ import type { GameObjectives, ObjectiveTimer } from "@league-studio/shared-types
 import {
   OBJECTIVE_FIRST_SPAWN_TIMES,
   OBJECTIVE_RESPAWN_TIMES,
+  VOIDGRUB_TOTAL_COUNT
 } from "@league-studio/shared-types";
 import type { LiveClientEvent } from "../data-sources/liveClientTypes";
-
-const VOIDGRUB_TOTAL_COUNT = 3;
 
 const DRAGONS_REQUIRED_FOR_SOUL = 4;
 

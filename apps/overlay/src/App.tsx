@@ -10,12 +10,12 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
 
   useEffect(() => {
-    const socket = connectGameState((nextState) => {
+    const connection = connectGameState((nextState) => {
       setGameState(nextState);
     });
 
     return () => {
-      socket.close();
+      connection.close();
     };
   }, []);
 

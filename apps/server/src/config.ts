@@ -8,6 +8,7 @@ loadEnv({ path: resolve(serverRoot, ".env") });
 const DEFAULT_INTERVAL_MS = 1000;
 const DEFAULT_WS_PORT = 8081;
 const DEFAULT_HTTP_PORT = 3000;
+const DEFAULT_WS_HEARTBEAT_MS = 30_000;
 
 const DEFAULT_AGENT_INGEST_PORT = 3001;
 
@@ -24,9 +25,14 @@ export const gameStateIntervalMs = parsePositiveInt(
 
 export const wsPort = parsePositiveInt(process.env.WS_PORT, DEFAULT_WS_PORT);
 
+export const httpPort = parsePositiveInt(process.env.HTTP_PORT, DEFAULT_HTTP_PORT);
+
+export const wsHeartbeatIntervalMs = parsePositiveInt(
+  process.env.WS_HEARTBEAT_INTERVAL_MS,
+  DEFAULT_WS_HEARTBEAT_MS,
+);
 export const agentIngestPort = parsePositiveInt(
   process.env.AGENT_INGEST_PORT,
   DEFAULT_AGENT_INGEST_PORT
   
 );
-export const httpPort = parsePositiveInt(process.env.HTTP_PORT, DEFAULT_HTTP_PORT);

@@ -1,7 +1,8 @@
 import "./httpServer";
 import { WebSocketServer, type WebSocket } from "ws";
-import { gameStateIntervalMs, wsHeartbeatIntervalMs, wsPort } from "./config";
+import { gameStateIntervalMs, wsHeartbeatIntervalMs, agentIngestPort, wsPort } from "./config";
 import { getCurrentGameState } from "./services/gameStateProvider";
+import { startAgentIngestServer } from "./agentIngestServer";
 
 type HeartbeatSocket = WebSocket & { isAlive: boolean };
 
@@ -84,3 +85,4 @@ wss.on("connection", (socket) => {
 });
 
 console.log(`WebSocket server running on ws://localhost:${wsPort}`);
+startAgentIngestServer(agentIngestPort);

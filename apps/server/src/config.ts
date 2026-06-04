@@ -10,6 +10,8 @@ const DEFAULT_WS_PORT = 8081;
 const DEFAULT_HTTP_PORT = 3000;
 const DEFAULT_WS_HEARTBEAT_MS = 30_000;
 
+const DEFAULT_AGENT_INGEST_PORT = 3001;
+
 function parsePositiveInt(value: string | undefined, fallback: number): number {
   if (value === undefined) return fallback;
   const parsed = Number.parseInt(value, 10);
@@ -28,4 +30,9 @@ export const httpPort = parsePositiveInt(process.env.HTTP_PORT, DEFAULT_HTTP_POR
 export const wsHeartbeatIntervalMs = parsePositiveInt(
   process.env.WS_HEARTBEAT_INTERVAL_MS,
   DEFAULT_WS_HEARTBEAT_MS,
+);
+export const agentIngestPort = parsePositiveInt(
+  process.env.AGENT_INGEST_PORT,
+  DEFAULT_AGENT_INGEST_PORT
+  
 );

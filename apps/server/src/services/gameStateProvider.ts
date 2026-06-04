@@ -8,15 +8,14 @@ import { mergeAgentObjectivesIntoGameState } from "./agentObjectiveStore";
  */
 export async function getCurrentGameState(): Promise<GameState | null> {
   if (process.env.USE_MOCK !== "false") {
-    return mergeAgentObjectivesIntoGameState(getMockGameState());
+    return getMockGameState();
   }
 
   try {
-//    return await getLiveClientGameState();
-      const gameState = await getLiveClientGameState();
-      return mergeAgentObjectivesIntoGameState(gameState);
+    const liveGameState = await getLiveClientGameState();
+    return mergeAgentObjectivesIntoGameState(liveGameState);
   } catch (error) {
-    console.warn("Live Client API 연결 실패. mock 데이터 사용 중.", error);
+    console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
     return getMockGameState();
   }
 }

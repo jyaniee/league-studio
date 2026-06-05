@@ -5,6 +5,7 @@ import {
 } from "node:http";
 import { Buffer } from "node:buffer";
 import type { AgentObjectiveEventPayload } from "@league-studio/shared-types";
+import { addAgentObjectiveEvent } from "./services/agentObjectiveStore";
 
 function sendJson(
   res: ServerResponse,
@@ -37,9 +38,21 @@ export function startAgentIngestServer(port: number): void {
       try {
         const payload = await readJsonBody<AgentObjectiveEventPayload>(req);
 
+//        console.log("[AGENT OBJECTIVE EVENT]", payload);
+
+//        sendJson(res, 200, { ok: true });
         console.log("[AGENT OBJECTIVE EVENT]", payload);
 
-        sendJson(res, 200, { ok: true });
+        const result = addAgentObjectiveEvent(payload);
+
+        if (result.status === "applied"){
+          console.log("[AGENT OBEJCTIVE STATE UPDATED]", result.state);
+        }else if(result.status === "duplicate") {
+          console.warn("[AGENT OBJECTIVE EVENT DUPLICATED]", result.key);
+        }
+
+        sendJson(res, 200, { ok: true, status: result.status});
+
       } catch (error) {
         console.error("Failed to receive agent objective event:", error);
         sendJson(res, 400, { ok: false, error: "Invalid JSON payload" });

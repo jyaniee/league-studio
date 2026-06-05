@@ -10,3 +10,5 @@ export const OBJECTIVE_RESPAWN_TIMES = {
   elder: 6 * 60,       // 처치 후 6분
   baron: 6 * 60,       // 처치 후 6분
 } as const;
+
+export const VOIDGRUB_TOTAL_COUNT = 3;

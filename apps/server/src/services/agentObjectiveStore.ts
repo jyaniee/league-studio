@@ -13,6 +13,7 @@ type ObjectiveSideState = {
   voidgrubs: number;
   heralds: number;
   barons: number;
+  towers: number;
 };
 
 export type AgentObjectiveState = {
@@ -33,6 +34,7 @@ const createEmptySideState = (): ObjectiveSideState => ({
   voidgrubs: 0,
   heralds: 0,
   barons: 0,
+  towers: 0,
 });
 
 const state: AgentObjectiveState = {
@@ -150,6 +152,10 @@ export function addAgentObjectiveEvent(
       targetSide.barons += 1;
       break;
     }
+    case "tower": {
+      targetSide.towers += 1;
+      break;
+    }
   }
 
   processedEventKeys.add(key);
@@ -175,6 +181,15 @@ export function mergeAgentObjectivesIntoGameState(
         agentState.blue.voidgrubs > 0
           ? agentState.blue.voidgrubs
           : gameState.blueTeam.voidgrubs,
+      heralds:
+        agentState.blue.heralds > 0
+          ? agentState.blue.heralds
+          : gameState.blueTeam.heralds,
+      barons:
+        agentState.blue.barons > 0
+          ? agentState.blue.barons
+          : gameState.blueTeam.barons,
+      towers: Math.max(gameState.blueTeam.towers, agentState.blue.towers),
     },
 
     redTeam: {
@@ -187,6 +202,15 @@ export function mergeAgentObjectivesIntoGameState(
         agentState.red.voidgrubs > 0
           ? agentState.red.voidgrubs
           : gameState.redTeam.voidgrubs,
+      heralds:
+        agentState.blue.heralds > 0
+          ? agentState.blue.heralds
+          : gameState.blueTeam.heralds,
+      barons:
+        agentState.blue.barons > 0
+          ? agentState.blue.barons
+          : gameState.blueTeam.barons,
+      towers: Math.max(gameState.redTeam.towers, agentState.red.towers),
     },
 
     updatedAt: new Date().toISOString(),

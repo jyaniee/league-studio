@@ -5,6 +5,16 @@ import { calculateObjectives } from "../calculators/objectiveTimers";
 type LiveClientEvent = LiveClientRawData["eventData"]["Events"][number];
 type LiveClientPlayer = LiveClientRawData["players"][number];
 
+function countTeamObjective(
+  events: LiveClientEvent[],
+  team: "ORDER" | "CHAOS",
+  eventName: string,
+): number {
+  return events.filter(
+    (event) => event.EventName === eventName && event.KillerTeam === team,
+  ).length;
+}
+
 function addKillerTeamToEvents(
   events: LiveClientEvent[],
   players: LiveClientPlayer[],
@@ -93,6 +103,8 @@ export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
       towers: countTeamTowers(events, "ORDER"),
       dragons: getTeamDragons(events, "ORDER"),
       voidgrubs: countTeamVoidgrubs(events, "ORDER"),
+      heralds: countTeamObjective(events, "ORDER", "HeraldKill"),
+      barons: countTeamObjective(events, "ORDER", "BaronKill"),
     },
     redTeam: {
       side: "red",
@@ -103,6 +115,8 @@ export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
       towers: countTeamTowers(events, "CHAOS"),
       dragons: getTeamDragons(events, "CHAOS"),
       voidgrubs: countTeamVoidgrubs(events, "CHAOS"),
+      heralds: countTeamObjective(events, "CHAOS", "HeraldKill"),
+      barons: countTeamObjective(events, "CHAOS", "BaronKill"),
     },
     objectives: calculateObjectives(gameTime, events),
     source: "live-client-api",

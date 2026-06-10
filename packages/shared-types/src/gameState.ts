@@ -74,6 +74,10 @@ export interface TeamState {
 
   dragons: DragonType[]; // 해당 팀이 획득한 드래곤 목록
   voidgrubs: number; // 해당 팀이 처치한 공허 유충 수
+  
+  heralds: number;
+  barons: number;
+  
 }
 
 

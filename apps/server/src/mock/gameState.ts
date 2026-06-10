@@ -34,6 +34,8 @@ export function getMockGameState(): GameState {
       towers: 0,
       dragons: [],
       voidgrubs: 0,
+      heralds: 0,
+      barons: 0,
     },
 
     redTeam: {
@@ -45,6 +47,8 @@ export function getMockGameState(): GameState {
       towers: 0,
       dragons: [],
       voidgrubs: 0,
+      heralds: 0,
+      barons: 0,
     },
 
     objectives: calculateObjectives(time, mockEvents),

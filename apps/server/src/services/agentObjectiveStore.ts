@@ -174,42 +174,24 @@ export function mergeAgentObjectivesIntoGameState(
     blueTeam: {
       ...gameState.blueTeam,
       dragons:
-        agentState.blue.dragons.length > 0
+        agentState.blue.dragons.length > gameState.blueTeam.dragons.length
           ? [...agentState.blue.dragons]
           : gameState.blueTeam.dragons,
-      voidgrubs:
-        agentState.blue.voidgrubs > 0
-          ? agentState.blue.voidgrubs
-          : gameState.blueTeam.voidgrubs,
-      heralds:
-        agentState.blue.heralds > 0
-          ? agentState.blue.heralds
-          : gameState.blueTeam.heralds,
-      barons:
-        agentState.blue.barons > 0
-          ? agentState.blue.barons
-          : gameState.blueTeam.barons,
+      voidgrubs: Math.max(gameState.blueTeam.voidgrubs, agentState.blue.voidgrubs),
+      heralds: Math.max(gameState.blueTeam.heralds, agentState.blue.heralds),
+      barons: Math.max(gameState.blueTeam.barons, agentState.blue.barons),
       towers: Math.max(gameState.blueTeam.towers, agentState.blue.towers),
     },
 
     redTeam: {
       ...gameState.redTeam,
       dragons:
-        agentState.red.dragons.length > 0
+        agentState.red.dragons.length > gameState.redTeam.dragons.length
           ? [...agentState.red.dragons]
           : gameState.redTeam.dragons,
-      voidgrubs:
-        agentState.red.voidgrubs > 0
-          ? agentState.red.voidgrubs
-          : gameState.redTeam.voidgrubs,
-      heralds:
-        agentState.blue.heralds > 0
-          ? agentState.blue.heralds
-          : gameState.blueTeam.heralds,
-      barons:
-        agentState.blue.barons > 0
-          ? agentState.blue.barons
-          : gameState.blueTeam.barons,
+      voidgrubs: Math.max(gameState.redTeam.voidgrubs, agentState.red.voidgrubs),
+      heralds: Math.max(gameState.redTeam.heralds, agentState.red.heralds),
+      barons: Math.max(gameState.redTeam.barons, agentState.red.barons),
       towers: Math.max(gameState.redTeam.towers, agentState.red.towers),
     },
 

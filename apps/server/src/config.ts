@@ -11,6 +11,7 @@ const DEFAULT_HTTP_PORT = 3000;
 const DEFAULT_WS_HEARTBEAT_MS = 30_000;
 
 const DEFAULT_AGENT_INGEST_PORT = 3001;
+const DEFAULT_OBSERVER_INGEST_PORT = 3002;
 
 function parsePositiveInt(value: string | undefined, fallback: number): number {
   if (value === undefined) return fallback;
@@ -36,3 +37,15 @@ export const agentIngestPort = parsePositiveInt(
   DEFAULT_AGENT_INGEST_PORT
   
 );
+
+export const observerIngestPort = parsePositiveInt(
+  process.env.OBSERVER_INGEST_PORT,
+  DEFAULT_OBSERVER_INGEST_PORT
+);
+
+/*
+3000: GET /game-state 디버그용
+3001: Agent 이벤트 수신
+3002: Observer 데이터 수신
+8081: Overlay WebSocket
+*/

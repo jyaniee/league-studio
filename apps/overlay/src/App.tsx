@@ -6,6 +6,8 @@ import ObjectiveTimerOverlay from './components/objective-timer/ObjectiveTimerOv
 import { initialGameState } from './mock/gameState';
 import { connectGameState } from './services/socket';
 
+import { BottomScoreboard } from './components/bottom-hud/BottomScoreboard';
+
 export default function App() {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
 
@@ -23,6 +25,7 @@ export default function App() {
     <>
       <ObjectiveTimerOverlay gameState={gameState}/>
       <TopScoreboard gameState={gameState}/>
+      <BottomScoreboard/>
     </>
   );
 }

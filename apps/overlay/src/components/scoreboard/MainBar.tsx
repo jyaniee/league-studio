@@ -27,7 +27,7 @@ const TOWER_ICON_HEIGHT = 20;
 const GOLD_ICON_HEIGHT = 20;
 const CENTER_LOGO_HEIGHT = 40;
 
-const SCORE_FONT_SIZE = 30;
+const SCORE_FONT_SIZE = 42;
 const STAT_FONT_SIZE = 18;
 const GOLD_FONT_SIZE = 18;
 const GOLD_DIFF_FONT_SIZE = 14;
@@ -210,7 +210,7 @@ export default function MainBar({ gameState }: MainBarProps) {
           ...statTextStyle,
         }}
         >
-          {blueTeam.towers}
+          {blueTeam.kills}
         </span>
 
         {/* 블루 골드 아이콘 */}
@@ -329,7 +329,7 @@ export default function MainBar({ gameState }: MainBarProps) {
           ...statTextStyle,
         }}
         >
-          {redTeam.towers}
+          {redTeam.kills}
         </span>
 
 

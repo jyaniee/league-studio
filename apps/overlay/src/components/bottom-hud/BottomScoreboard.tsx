@@ -40,18 +40,18 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                        <div style= {styles.redSide}>
                         <div style={styles.championPortrait}></div>
 
-                        <div style={styles.redSide}>
+                        <div style={styles.statsGroup}>
                             <span style={styles.csTest}>123</span>
                             <span style={styles. kdaText}>0/1/2</span>
                         </div>
 
-                        <div style={styles.itemcontainer}>
+                        <div style={styles.itemContainer}>
                         {[1,2,3,4,5,6].map((i)=> (
                             <div key={i} style={styles.itemSlot}></div>
                             ))}
+                        </div>
 
                         <div style={styles.spellBox}></div>
-                        </div>
 
                         {index < 4 && <div style={styles.divider}></div>}
                      </div>
@@ -63,14 +63,15 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
 
        const styles: { [key : string]: React.CSSProperties } = {
         container: {
-             maxWidth: '834px',
+             width: '834px',
              height: '250px',
              backgroundColor: '#0a0a0c',
              display: 'flex',
-             flexDirection: 'coloumn',
+             flexDirection: 'column',
              position: 'absolute',
              bottom: '0',
              left: '50%',
+             transform: 'translateX(-50%)',
              color: '#ffffff',
              fontFamily: 'sans-serif',
         },
@@ -79,7 +80,7 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                 height:'22px',
                 display:'flex',
                 justifyContent:'center',
-                alignIstems: 'center',
+                alignItems: 'center',
                 fontSize: '12px',
                 fontWeight: 'bold',
             },
@@ -87,7 +88,7 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
         rowWrapper: {
                 flex: 1,
                 display: 'flex',
-                alignIstems: 'center',
+                alignItems: 'center',
                 position: 'relative',
                 padding: '0 12px',
              },
@@ -116,14 +117,14 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                 justifyContent: 'center',
              },
 
-             centerAxis: {
-                wudth: '16px',
+        centerAxis: {
+                width: '16px',
              },
 
-             championportrait: {
+        championPortrait: {
                 width: '35px',
                 height: '35px',
-                border: '1px solid #00ff00',
+                border: '1px solid #ffffff',
                 backgroundColor: '#333',
                 flexShrink: 0,
              },
@@ -135,40 +136,41 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                 flexShrink: 0,
              },
 
-            itemContainer: {
+        itemContainer: {
                 display: 'flex',
                 gap: '2px',
             },
 
-            itemSlot: {
+        itemSlot: {
                 width: '30px',
                 height: '30px',
                 backgroundColor: '#000000',
             },
 
-            statsGroup: {
+        statsGroup: {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                minwidth: '80px',
+                minWidth: '80px',
                 justifyContent: 'center',
             },
-            kdaText: {
-                fonSize: '14px',
+        kdaText: {
+                fontSize: '14px',
                 fontWeight: 'bold',
             },
 
-            csTest: {
+        csTest: {
                 fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#bdc3c7',
             },
 
-            divider: {
+        divider: {
                 position: 'absolute',
                 bottom: 0,
-                left: '1%',
-                width: '98px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '808px',
                 height: '1px',
                 backgroundColor: 'rgba(108, 92, 231, 0.5)',
             },

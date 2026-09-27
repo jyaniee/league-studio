@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import type { GameState } from '@league-studio/shared-types';
 
 import MainBar from './MainBar';

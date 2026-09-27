@@ -7,6 +7,11 @@ loadEnv({ path: resolve(serverRoot, ".env") });
 
 const DEFAULT_INTERVAL_MS = 1000;
 const DEFAULT_WS_PORT = 8081;
+const DEFAULT_HTTP_PORT = 3000;
+const DEFAULT_WS_HEARTBEAT_MS = 30_000;
+
+const DEFAULT_AGENT_INGEST_PORT = 3001;
+const DEFAULT_OBSERVER_INGEST_PORT = 3002;
 
 function parsePositiveInt(value: string | undefined, fallback: number): number {
   if (value === undefined) return fallback;
@@ -20,3 +25,27 @@ export const gameStateIntervalMs = parsePositiveInt(
 );
 
 export const wsPort = parsePositiveInt(process.env.WS_PORT, DEFAULT_WS_PORT);
+
+export const httpPort = parsePositiveInt(process.env.HTTP_PORT, DEFAULT_HTTP_PORT);
+
+export const wsHeartbeatIntervalMs = parsePositiveInt(
+  process.env.WS_HEARTBEAT_INTERVAL_MS,
+  DEFAULT_WS_HEARTBEAT_MS,
+);
+export const agentIngestPort = parsePositiveInt(
+  process.env.AGENT_INGEST_PORT,
+  DEFAULT_AGENT_INGEST_PORT
+  
+);
+
+export const observerIngestPort = parsePositiveInt(
+  process.env.OBSERVER_INGEST_PORT,
+  DEFAULT_OBSERVER_INGEST_PORT
+);
+
+/*
+3000: GET /game-state 디버그용
+3001: Agent 이벤트 수신
+3002: Observer 데이터 수신
+8081: Overlay WebSocket
+*/

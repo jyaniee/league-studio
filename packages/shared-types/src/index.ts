@@ -1,2 +1,4 @@
 export * from "./gameState";
-export * from "./objectiveConstants"
+export * from "./objectiveConstants";
+export * from "./agentEvents";
+export * from "./observerEvents";

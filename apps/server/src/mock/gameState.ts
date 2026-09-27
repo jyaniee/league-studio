@@ -1,5 +1,5 @@
 import type { GameState } from "@league-studio/shared-types";
-import { calculateObjectives } from "../objectiveTimers";
+import { calculateObjectives } from "../calculators/objectiveTimers";
 //가짜 데이터 파일 게임이 안 켜져 있거나 API 연결이 실패했을 때 쓰는 가짜 데이터 파일
 let time = 0;
 
@@ -21,14 +21,39 @@ export function getMockGameState(): GameState {
     },
   ];
 
-  return {
+   return {
     phase: "in-game",
     gameTime: time,
-    blueTeamName: "BLUE",
-    redTeamName: "RED",
-    blueKills: Math.floor(time / 5),
-    redKills: Math.floor(time / 7),
+
+    blueTeam: {
+      side: "blue",
+      name: "BLUE",
+      logoUrl: undefined,
+      kills: Math.floor(time / 5),
+      globalGold: undefined,
+      towers: 0,
+      dragons: [],
+      voidgrubs: 0,
+      heralds: 0,
+      barons: 0,
+    },
+
+    redTeam: {
+      side: "red",
+      name: "RED",
+      logoUrl: undefined,
+      kills: Math.floor(time / 7),
+      globalGold: undefined,
+      towers: 0,
+      dragons: [],
+      voidgrubs: 0,
+      heralds: 0,
+      barons: 0,
+    },
+
     objectives: calculateObjectives(time, mockEvents),
+
     source: "mock",
+    updatedAt: new Date().toISOString(),
   };
 }

@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { GameState } from '@league-studio/shared-types';
 
 import TopScoreboard from './components/scoreboard/TopScoreboard';
 import ObjectiveTimerOverlay from './components/objective-timer/ObjectiveTimerOverlay';
 import { initialGameState } from './mock/gameState';
+import { connectGameState } from './services/socket';
+
+import { BottomScoreboard } from './components/bottom-hud/BottomScoreboard';
 
 export default function App() {
-  const [gameState] = useState<GameState>(initialGameState);
+  const [gameState, setGameState] = useState<GameState>(initialGameState);
+
+  useEffect(() => {
+    const connection = connectGameState((nextState) => {
+      setGameState(nextState);
+    });
+
+    return () => {
+      connection.close();
+    };
+  }, []);
+
   return (
     <>
       <ObjectiveTimerOverlay gameState={gameState}/>
       <TopScoreboard gameState={gameState}/>
+      <BottomScoreboard/>
     </>
   );
 }

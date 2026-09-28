@@ -4,7 +4,7 @@ interface ObjectiveTimerPanelProps {
     timer: ObjectiveTimerViewModel;
 }
 
-const PANEL_WIDTH = 156;
+const PANEL_WIDTH = 138;
 
 export default function ObjectiveTimerPanel({ timer }: ObjectiveTimerPanelProps) {
     const isLeft = timer.position === "left";

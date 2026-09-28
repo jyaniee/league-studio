@@ -80,7 +80,7 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
         container: {
              width: '834px',
              height: '250px',
-             backgroundColor: '#0a0a0c',
+             backgroundColor: '#17112B',
              display: 'flex',
              flexDirection: 'column',
              position: 'absolute',
@@ -92,6 +92,7 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
         },
 
         header: {
+                position: 'relative',
                 height:'22px',
                 display:'flex',
                 justifyContent:'center',
@@ -121,14 +122,6 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
              },
-        
-        redstats: {
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                minwidth: '80px',
-                justifyContent: 'center',
-             },
 
         centerAxis: {
                 width: GAP.center,
@@ -139,18 +132,19 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                 width: '35px',
                 height: '35px',
                 border: '1px solid #ffffff',
-                backgroundColor: '#333',
+                backgroundColor: 'transparent',
+                boxSizing: 'border-box',
                 flexShrink: 0,
              },
 
-             spellBox: {
+        spellBox: {
                 width: '30px',
                 height: '30px',
                 backgroundColor: '#2ecc71',
                 flexShrink: 0,
              },
 
-            itemContainer: {
+        itemContainer: {
                 display: 'flex',
                 flexShrink : 0,
             },
@@ -159,6 +153,7 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                 width: '30px',
                 height: '30px',
                 backgroundColor: '#000000',
+                flexShrink : 0,
             },
 
         statsGroup: {
@@ -168,23 +163,22 @@ export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
                flexShrink: 0,
             },
         kdaText: {
-                fontSize: '14px',
-                fontWeight: 'bold',
+                fontSize: '18px',
+                fontWeight: 400,
             },
 
         csTest: {
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#bdc3c7',
+                fontSize: '15px',
+                fontWeight: 400,
+                color: '#ffffff',
             },
 
         divider: {
                 position: 'absolute',
                 bottom: 0,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '808px',
+                left: EDGE,
+                right: EDGE,
                 height: '1px',
-                backgroundColor: 'rgba(108, 92, 231, 0.5)',
+                backgroundColor: '#FFFFFF',
             },
         };

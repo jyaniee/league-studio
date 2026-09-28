@@ -10,7 +10,7 @@ import hleLogo from '../assets/teams/hanwha.png';
 const initialGameTime = 785; // 13:05
 const initialDragonKillTime = 620;
 const nextDragonSpawnTime =
-  initialDragonKillTime + OBJECTIVE_RESPAWN_TIMES.dragon;
+initialDragonKillTime + OBJECTIVE_RESPAWN_TIMES.dragon;
 
 
 export const initialGameState: GameState = {
@@ -21,7 +21,7 @@ export const initialGameState: GameState = {
     side: 'blue',
     name: 'KT',
     logoUrl: ktLogo,
-    kills: 0,
+    kills: 12,
     towers: 4,
     dragons: ['cloud', 'infernal'],
     voidgrubs: 3,
@@ -34,7 +34,7 @@ export const initialGameState: GameState = {
     side: 'red',
     name: 'HLE',
     logoUrl: hleLogo,
-    kills: 0,
+    kills: 8,
     towers: 2,
     dragons: ['mountain'],
     voidgrubs: 0,
@@ -48,27 +48,29 @@ export const initialGameState: GameState = {
       status: 'waiting',
       isAlive: false,
       canRespawn: true,
-      dragonType: 'hextech',
+      dragonType: 'chemtech',
       spawnTimeSeconds: OBJECTIVE_FIRST_SPAWN_TIMES.dragon,
       lastKillTimeSeconds: initialDragonKillTime,
       nextSpawnTimeSeconds: nextDragonSpawnTime,
-      remainingSeconds: 61,
+      remainingSeconds: nextDragonSpawnTime - initialGameTime,
     },
     elder: {
       status: 'inactive',
       isAlive: false,
       canRespawn: true,
     },
+    
     baron: {
       status: 'inactive',
       isAlive: false,
       canRespawn: true,
       spawnTimeSeconds: OBJECTIVE_FIRST_SPAWN_TIMES.baron,
       nextSpawnTimeSeconds: OBJECTIVE_FIRST_SPAWN_TIMES.baron,
-      remainingSeconds: 255, //OBJECTIVE_FIRST_SPAWN_TIMES.baron - initialGameTime,
+      remainingSeconds: OBJECTIVE_FIRST_SPAWN_TIMES.baron - initialGameTime,
     },
+
     herald: {
-      status: 'ended',
+      status: 'inactive',
       isAlive: false,
       canRespawn: true, // 1게임에 최대 2번
       spawnTimeSeconds: OBJECTIVE_FIRST_SPAWN_TIMES.herald,
@@ -76,10 +78,9 @@ export const initialGameState: GameState = {
       remainingSeconds: OBJECTIVE_FIRST_SPAWN_TIMES.herald - initialGameTime,
     },
     voidgrubs: {
-      status: 'ended',
-      isAlive: false,
+      status: 'alive',
+      isAlive: true,
       canRespawn: false,
-      remainingSeconds: 255,
       spawnTimeSeconds: OBJECTIVE_FIRST_SPAWN_TIMES.voidgrubs,
     },
   },

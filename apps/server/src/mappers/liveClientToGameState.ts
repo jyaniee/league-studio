@@ -1,9 +1,27 @@
-import type { DragonType, GameState } from "@league-studio/shared-types";
+import type {
+  DragonType,
+  GameState,
+  PlayerItem,
+  PlayerPosition,
+  PlayerState,
+  TeamSide,
+} from "@league-studio/shared-types";
 import type { LiveClientRawData } from "../data-sources/liveClientTypes";
 import { calculateObjectives } from "../calculators/objectiveTimers";
 
 type LiveClientEvent = LiveClientRawData["eventData"]["Events"][number];
 type LiveClientPlayer = LiveClientRawData["players"][number];
+type LiveClientItem = NonNullable<LiveClientPlayer["items"]>[number];
+
+const CHAMPION_KEY_PREFIX = "game_character_displayname_";
+const TRINKET_SLOT = 6;
+const POSITION_ORDER: PlayerPosition[] = [
+  "TOP",
+  "JUNGLE",
+  "MIDDLE",
+  "BOTTOM",
+  "UTILITY",
+];
 
 function addKillerTeamToEvents(
   events: LiveClientEvent[],
@@ -77,6 +95,84 @@ function countTeamTowers(
   ).length;
 }
 
+function toTeamSide(team: "ORDER" | "CHAOS"): TeamSide {
+  return team === "ORDER" ? "blue" : "red";
+}
+
+function toPlayerPosition(position?: string): PlayerPosition | undefined {
+  return POSITION_ORDER.find((candidate) => candidate === position);
+}
+
+function toChampionKey(rawChampionName?: string): string {
+  if (!rawChampionName?.startsWith(CHAMPION_KEY_PREFIX)) {
+    return "";
+  }
+
+  return rawChampionName.slice(CHAMPION_KEY_PREFIX.length);
+}
+
+function mapPlayerItems(items: LiveClientItem[] | undefined): {
+  items: PlayerItem[];
+  trinketItemId?: number;
+} {
+  const inventory: PlayerItem[] = [];
+  let trinketItemId: number | undefined;
+
+  for (const item of items ?? []) {
+    if (item.slot === TRINKET_SLOT) {
+      trinketItemId = item.itemID;
+      continue;
+    }
+
+    if (item.slot >= 0 && item.slot <= 5) {
+      inventory.push({
+        itemId: item.itemID,
+        slot: item.slot,
+      });
+    }
+  }
+
+  inventory.sort((a, b) => a.slot - b.slot);
+
+  return { items: inventory, trinketItemId };
+}
+
+function comparePlayers(a: PlayerState, b: PlayerState): number {
+  if (a.side !== b.side) {
+    return a.side === "blue" ? -1 : 1;
+  }
+
+  return POSITION_ORDER.indexOf(a.position) - POSITION_ORDER.indexOf(b.position);
+}
+
+function mapPlayers(players: LiveClientPlayer[]): PlayerState[] {
+  return players
+    .flatMap((player) => {
+      const position = toPlayerPosition(player.position);
+
+      if (!position) {
+        return [];
+      }
+
+      const { items, trinketItemId } = mapPlayerItems(player.items);
+
+      return [
+        {
+          side: toTeamSide(player.team),
+          position,
+          championKey: toChampionKey(player.rawChampionName),
+          kills: player.scores?.kills ?? 0,
+          deaths: player.scores?.deaths ?? 0,
+          assists: player.scores?.assists ?? 0,
+          creepScore: player.scores?.creepScore ?? 0,
+          items,
+          trinketItemId,
+        },
+      ];
+    })
+    .sort(comparePlayers);
+}
+
 export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
   const gameTime = raw.gameStats.gameTime;
   const events = addKillerTeamToEvents(raw.eventData.Events ?? [], raw.players);
@@ -104,6 +200,7 @@ export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
       dragons: getTeamDragons(events, "CHAOS"),
       voidgrubs: countTeamVoidgrubs(events, "CHAOS"),
     },
+    players: mapPlayers(raw.players),
     objectives: calculateObjectives(gameTime, events),
     source: "live-client-api",
     updatedAt: new Date().toISOString(),

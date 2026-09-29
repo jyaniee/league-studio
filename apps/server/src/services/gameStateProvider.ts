@@ -3,6 +3,7 @@ import { attachDataDragonImages } from "../data-sources/dataDragon";
 import { getMockGameState } from "../mock/gameState";
 import { getLiveClientGameState } from "./gameStateService";
 import { mergeAgentObjectivesIntoGameState } from "./agentObjectiveStore";
+import { mergeObserverStateIntoGameState } from "./observerStateStore";
 
 async function withDataDragonImages(gameState: GameState): Promise<GameState> {
   try {
@@ -19,14 +20,17 @@ async function withDataDragonImages(gameState: GameState): Promise<GameState> {
  */
 export async function getCurrentGameState(): Promise<GameState | null> {
   if (process.env.USE_MOCK !== "false") {
-    return withDataDragonImages(getMockGameState());
+    // mock 상태에서도 Observer match-info 반영 가능하도록 수정함 2026-06-16:jhan
+    return withDataDragonImages(mergeObserverStateIntoGameState(getMockGameState()));
   }
 
   try {
     const liveGameState = await getLiveClientGameState();
-    return withDataDragonImages(mergeAgentObjectivesIntoGameState(liveGameState));
+    const withAgentObjectives = mergeAgentObjectivesIntoGameState(liveGameState);
+
+    return withDataDragonImages(mergeObserverStateIntoGameState(withAgentObjectives));
   } catch (error) {
     console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
-    return withDataDragonImages(getMockGameState());
+    return withDataDragonImages(mergeObserverStateIntoGameState(getMockGameState()));
   }
 }

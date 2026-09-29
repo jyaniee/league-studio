@@ -4,13 +4,15 @@ export type AgentObjectiveType =
   | "dragon"
   | "baron"
   | "herald"
-  | "voidgrub";
+  | "voidgrub"
+  | "tower";
 
 export type AgentObjectiveRawEventName =
   | "DragonKill"
   | "BaronKill"
   | "HeraldKill"
-  | "HordeKill";
+  | "HordeKill"
+  | "TurretKilled";
 
 export type AgentObjectiveEvent = {
   eventId: number;

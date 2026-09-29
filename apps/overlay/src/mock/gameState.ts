@@ -142,6 +142,8 @@ export const initialGameState: GameState = {
     dragons: ['cloud', 'infernal'],
     voidgrubs: 3,
     globalGold: 12500,
+    heralds: 0,
+    barons: 0,
   },
 
   redTeam: {
@@ -153,6 +155,8 @@ export const initialGameState: GameState = {
     dragons: ['mountain'],
     voidgrubs: 0,
     globalGold: 12100,
+    heralds: 0,
+    barons: 0,
   },
 
   players: initialPlayers,

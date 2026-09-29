@@ -13,6 +13,7 @@ type ObjectiveSideState = {
   voidgrubs: number;
   heralds: number;
   barons: number;
+  towers: number;
 };
 
 export type AgentObjectiveState = {
@@ -33,6 +34,7 @@ const createEmptySideState = (): ObjectiveSideState => ({
   voidgrubs: 0,
   heralds: 0,
   barons: 0,
+  towers: 0,
 });
 
 const state: AgentObjectiveState = {
@@ -150,6 +152,10 @@ export function addAgentObjectiveEvent(
       targetSide.barons += 1;
       break;
     }
+    case "tower": {
+      targetSide.towers += 1;
+      break;
+    }
   }
 
   processedEventKeys.add(key);
@@ -168,25 +174,25 @@ export function mergeAgentObjectivesIntoGameState(
     blueTeam: {
       ...gameState.blueTeam,
       dragons:
-        agentState.blue.dragons.length > 0
+        agentState.blue.dragons.length > gameState.blueTeam.dragons.length
           ? [...agentState.blue.dragons]
           : gameState.blueTeam.dragons,
-      voidgrubs:
-        agentState.blue.voidgrubs > 0
-          ? agentState.blue.voidgrubs
-          : gameState.blueTeam.voidgrubs,
+      voidgrubs: Math.max(gameState.blueTeam.voidgrubs, agentState.blue.voidgrubs),
+      heralds: Math.max(gameState.blueTeam.heralds, agentState.blue.heralds),
+      barons: Math.max(gameState.blueTeam.barons, agentState.blue.barons),
+      towers: Math.max(gameState.blueTeam.towers, agentState.blue.towers),
     },
 
     redTeam: {
       ...gameState.redTeam,
       dragons:
-        agentState.red.dragons.length > 0
+        agentState.red.dragons.length > gameState.redTeam.dragons.length
           ? [...agentState.red.dragons]
           : gameState.redTeam.dragons,
-      voidgrubs:
-        agentState.red.voidgrubs > 0
-          ? agentState.red.voidgrubs
-          : gameState.redTeam.voidgrubs,
+      voidgrubs: Math.max(gameState.redTeam.voidgrubs, agentState.red.voidgrubs),
+      heralds: Math.max(gameState.redTeam.heralds, agentState.red.heralds),
+      barons: Math.max(gameState.redTeam.barons, agentState.red.barons),
+      towers: Math.max(gameState.redTeam.towers, agentState.red.towers),
     },
 
     updatedAt: new Date().toISOString(),

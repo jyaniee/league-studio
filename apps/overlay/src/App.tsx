@@ -12,8 +12,8 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
 
   useEffect(() => {
-    const connection = connectGameState((nexState) => {
-      setGameState(nexState);
+    const connection = connectGameState((nextState) => {
+      setGameState(nextState);
     });
 
 return () => {

@@ -62,11 +62,31 @@ export interface GameObjectives {
   voidgrubs: ObjectiveTimer;
 }
 
+export type WardType =
+| "stealth" // 기본 와드 (투명 와드)
+| "oracle" // 예언자의 렌즈
+| "farsight"; // 망원형 개조 
+
+export type ItemSlot = number | null
+
+export interface PlayerState {
+  championName: string; //Data Dragon _챔피언 키 
+
+  kills : number;
+  deaths : number;
+  assists : number;
+  cs : number;
+
+  items : ItemSlot[]; //아이템 6칸 (와드 제외)
+  ward : WardType | null; // 보유 와드 종류, 없으면 null
+}
+
 export interface TeamState {
   side: TeamSide;
   name: string;
   tag?: string;
   logoUrl?: string;
+  players? : PlayerState[]; // 해당 팀 선수 5명 (하단 스코어보드용)
 
   kills: number;
   globalGold?: number; // 옵저버 툴(OCR)로 수집

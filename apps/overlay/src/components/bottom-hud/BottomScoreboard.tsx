@@ -8,7 +8,7 @@ const EDGE =12;
 const GAP = {
     wardToItems: 30,
     itemsToStats: 18,
-    kdaToCs: 22,
+    kdaToCs: 16,
     csToChampion: 6,
     center : 40,
 };
@@ -78,22 +78,19 @@ function ChampionPortrait({ name }: {name?: string}) {
 
                    {/* [좌측 Anchor]: 블루 팀 영역 ( flex: 1) */}
                     <div style={styles.blueSide}>
-                    <div style={styles.spellBox}></div>
+                    <WardSlot ward={blue?.ward} />
                     <div style={spacer(GAP.wardToItems)}></div>
 
-                    <div style={styles.itemContainer}>
-                        {[1,2,3,4,5,6].map((i)=> <div key={i} style={styles.itemSlot}></div>)}
-                        </div>
+                    <ItemSlots items={blue?.items} />
 
                     <div style={spacer(GAP.itemsToStats)}></div>
 
                     <div style={styles.statsGroup}>
-                        <span style={styles.kdaText}>0/1/2</span>
-                        <span style={styles.csTest}>123</span>
+                        <span style={styles.kdaText}>{kdaText(blue)}</span>
+                        <span style={styles.csTest}>{csText(blue)}</span>
                     </div>
 
-                    <div style={spacer(GAP.csToChampion)}></div>
-                    <div style={styles.championPortrait}></div>
+                    <ChampionPortrait name={blue?.championName} />
                     </div>
 
                        {/* [전체 중앙축]: 양 팀을 가르는 절대 기준점*/}
@@ -102,23 +99,20 @@ function ChampionPortrait({ name }: {name?: string}) {
 
                        {/*[우측 Anchor]: 레드 팀 영역 (flex : 1) */}
                        <div style= {styles.redSide}>
-                        <div style={styles.championPortrait}></div>
+                        <ChampionPortrait name={red?.championName} />
                         <div style={spacer (GAP.csToChampion)}></div>
 
                         <div style={styles.statsGroup}>
-                            <span style={styles.csTest}>123</span>
-                            <span style={styles.kdaText}>0/1/2</span>
+                            <span style={styles.csTest}>{csText(red)}</span>
+                            <span style={styles.kdaText}>{kdaText(red)}</span>
                         </div>
                         <div style={spacer(GAP.itemsToStats)}></div>
 
-                        <div style={styles.itemContainer}>
-                        {[1,2,3,4,5,6].map((i)=> (
-                            <div key={i} style={styles.itemSlot}></div>
-                            ))}
-                        </div>
+                        <ItemSlots items={red?.items} />
+
                         <div style={spacer(GAP.wardToItems)}></div>
 
-                        <div style={styles.spellBox}></div>
+                        <WardSlot ward={red?.ward} />
 
                         {index < 4 && <div style={styles.divider}></div>}
                      </div>
@@ -190,10 +184,10 @@ function ChampionPortrait({ name }: {name?: string}) {
                 flexShrink: 0,
              },
 
-        spellBox: {
+        wardSlot: {
                 width: '30px',
                 height: '30px',
-                backgroundColor: '#2ecc71',
+                backgroundColor: '#000000',
                 flexShrink: 0,
              },
 
@@ -207,7 +201,12 @@ function ChampionPortrait({ name }: {name?: string}) {
                 height: '30px',
                 backgroundColor: '#000000',
                 flexShrink : 0,
-            },
+        },
+                icon: {
+                    width: '100%',
+                    height: '100%',
+                    display: 'block',
+                },
 
         statsGroup: {
                 display: 'flex',
@@ -218,12 +217,19 @@ function ChampionPortrait({ name }: {name?: string}) {
         kdaText: {
                 fontSize: '18px',
                 fontWeight: 400,
+                minWidth: '44px',
+                textAlign: 'center',
+                fontVariantNumeric: 'tabular-nums',
+                whiteSpace: 'nowrap',
             },
 
         csTest: {
                 fontSize: '15px',
                 fontWeight: 400,
                 color: '#ffffff',
+                minWidth: '26px',
+                textAlign: 'center',
+                fontVariantNumeric: 'tabular-nums',
             },
 
         divider: {

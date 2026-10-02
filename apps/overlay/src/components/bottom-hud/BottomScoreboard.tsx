@@ -8,8 +8,8 @@ const EDGE =12;
 const GAP = {
     wardToItems: 30,
     itemsToStats: 18,
-    kdaToCs: 16,
-    csToChampion: 6,
+    kdaToCs: 8,
+    csToChampion: 10,
     center : 40,
 };
 const spacer = (width: number) : React.CSSProperties => ({width, flexShrink: 0 });
@@ -87,9 +87,10 @@ function ChampionPortrait({ name }: {name?: string}) {
 
                     <div style={styles.statsGroup}>
                         <span style={styles.kdaText}>{kdaText(blue)}</span>
-                        <span style={styles.csTest}>{csText(blue)}</span>
-                    </div>
-
+                        <span style={{...styles.csTest,textAlign: 'right'}}>{csText(blue)}</span>
+                        </div>
+                        
+                    <div style={spacer(GAP.csToChampion)}></div>
                     <ChampionPortrait name={blue?.championName} />
                     </div>
 
@@ -103,7 +104,7 @@ function ChampionPortrait({ name }: {name?: string}) {
                         <div style={spacer (GAP.csToChampion)}></div>
 
                         <div style={styles.statsGroup}>
-                            <span style={styles.csTest}>{csText(red)}</span>
+                            <span style={{...styles.csTest,textAlign: 'left'}}>{csText(red)}</span>
                             <span style={styles.kdaText}>{kdaText(red)}</span>
                         </div>
                         <div style={spacer(GAP.itemsToStats)}></div>
@@ -227,7 +228,7 @@ function ChampionPortrait({ name }: {name?: string}) {
                 fontSize: '15px',
                 fontWeight: 400,
                 color: '#ffffff',
-                minWidth: '26px',
+                minWidth: '30px',
                 textAlign: 'center',
                 fontVariantNumeric: 'tabular-nums',
             },

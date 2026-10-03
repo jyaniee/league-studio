@@ -1,6 +1,8 @@
-# League Studio
+<div align="center">
+  <img src="./docs/images/logo.png" alt="League Studio" width="340">
 
-> Real-time broadcast overlay toolkit for League of Legends custom tournaments.
+  <i>Real-time broadcast overlay toolkit for League of Legends custom tournaments.</i>
+</div>
 
 League Studio는 **League of Legends 사설 경기 및 소규모 대회의 관전 방송을 위한 실시간 오버레이 시스템**입니다.
 
@@ -336,8 +338,8 @@ https://github.com/jyaniee/league-studio-agent
 
 ## Team
 
-**Team X**
-
+**Team X**<br>
+동양미래대학교 컴퓨터소프트웨어공학과 졸업작품 프로젝트
 | Member | Role |
 | --- | --- |
 | 심재한 | Frontend / Backend / Observer Tool |

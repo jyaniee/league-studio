@@ -28,6 +28,19 @@ export const initialGameState: GameState = {
     globalGold: 12500,
     heralds: 0,
     barons: 0,
+
+    players : [
+      { championName: 'Aatrox' , kills: 3, deaths: 1, assists: 2, cs: 112,
+        items: [1055, 3047, 3071, 2003, null, null], ward: 'stealth'},
+      { championName: 'LeeSin', kills: 2, deaths: 2, assists: 5, cs: 78,
+        items: [1101, 3134, 3158, 1036, null, null], ward: 'oracle'},
+      { championName : 'Ahri' , kills: 4, deaths: 1, assists: 3, cs: 120,
+        items : [1056, 6655, 3020, null, null, null], ward: 'stealth' },
+      { championName : 'Jinx', kills: 3, deaths: 2, assists: 2, cs: 125,
+        items: [1055, 6672, 3006, 1036, null, null], ward: 'farsight'},
+      { championName : 'Thresh', kills: 0, deaths: 2, assists: 8, cs: 18,
+        items : [3865, 3047, 1029, 2055, null, null], ward: 'oracle'},
+    ],
   },
 
   redTeam: {
@@ -41,6 +54,19 @@ export const initialGameState: GameState = {
     globalGold: 12100,
     heralds: 0,
     barons: 0,
+    
+   players : [
+    { championName : 'Renekton', kills: 2, deaths: 3, assists: 1, cs: 105,
+      items : [1054, 3047, 3133, 2003, null, null], ward: 'stealth'},
+    { championName : 'Viego' , kills: 3, deaths: 2, assists: 2, cs: 82,
+      items : [1102, 3153, 3006, null, null, null], ward: 'oracle'},  
+    { championName : 'Orianna', kills: 1, deaths: 3, assists: 3, cs: 118,
+      items: [1056, 3802,3020,1052, null, null], ward: 'stealth'},
+    { championName : 'Kaisa', kills: 2,deaths: 2, assists: 2, cs: 121,
+      items: [1055, 3124, 3006, null, null, null], ward: 'farsight'}, 
+    { championName : 'Nautilus', kills: 0, deaths: 2, assists: 5, cs: 15,
+      items: [3865, 3111, 1029, 2055, null, null], ward: 'oracle'},
+    ]
   },
 
   objectives: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import type { GameState, PlayerState, WardType } from "@league-studio/shared-types";
 import { championIcon, itemIcon } from "../../constants/ddragon";
 
@@ -29,19 +29,27 @@ const toSixSlots = (items: PlayerState["items"] = []) =>
 const kdaText = (p?: PlayerState) => (p ? `${p.kills}/${p.deaths}/${p.assists}` : "-");
 const csText = (p?: PlayerState) => (p ? `${p.cs}` : "-");
 
-function WardSlot({ ward }:{ ward?: WardType | null }) {
+//이미지 로딩 실패 시 깨진 아이콘 대신 빈 슬롯으로 표시 
+function SafeImg({ src, alt } : { src   :  string; alt: string}) {
+    const [failedSrc, setFailedSrc] = useState<string | null>(null);
+    if (failedSrc === src) return null;
+    return <img src={src} alt={alt} style={styles.icon} onError={() => setFailedSrc(src)} />;
+}
+
+function WardSlot ({ ward } : { ward? : WardType | null }) {
     return (
         <div style={styles.wardSlot}>
-            {ward && <img src={itemIcon(WARD_ITEM_ID[ward])} alt={ward} style={styles.icon} />}
+            {ward && <SafeImg src={itemIcon(WARD_ITEM_ID[ward])} alt={ward} />}
         </div>
     );
 }
+
 function ItemSlots({ items }: {items?: PlayerState["items"] }) {
     return ( 
         <div style={styles.itemContainer}>
             {toSixSlots(items).map ((id, i) => (
                 <div key={i} style={styles.itemSlot}>
-                    {id !== null && <img src={itemIcon(id)} alt="" style={styles.icon} />}
+                    {id !== null && <SafeImg src={itemIcon(id)} alt="" />}
                     </div>
                  ))}
             </div>
@@ -51,7 +59,7 @@ function ItemSlots({ items }: {items?: PlayerState["items"] }) {
 function ChampionPortrait({ name }: {name?: string}) {
     return (
         <div style={styles.championPortrait}>
-            {name && <img src={championIcon(name)} alt={name} style={styles.icon} />}
+            {name && <SafeImg src={championIcon(name)} alt={name} />}
          </div>
     );
 }

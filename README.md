@@ -1,9 +1,9 @@
-<div align="center">
-  <img src="./docs/images/logo.png" alt="League Studio" width="340">
-
+<p align="center">
+  <img src="./docs/images/logo.png" alt="League Studio" width="340"><br>
   <i>Real-time broadcast overlay toolkit for League of Legends custom tournaments.</i>
-</div>
+</p>
 
+<br>
 League Studio는 **League of Legends 사설 경기 및 소규모 대회의 관전 방송을 위한 실시간 오버레이 시스템**입니다.
 
 일반적인 사설 경기 환경에서도 경기 정보와 오브젝트 상태를 방송용 UI로 시각화하여, 보다 완성도 높은 관전 화면을 구성할 수 있도록 하는 것을 목표로 합니다.

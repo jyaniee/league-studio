@@ -26,11 +26,7 @@ League Studio는 다음 세 개의 저장소로 구성됩니다.
 
 ## Architecture
 
-<!--
-Architecture diagram placeholder
-
 ![League Studio Architecture](./docs/images/architecture.png)
--->
 
 League Studio의 Backend Server는 시스템의 **중앙 상태 관리자** 역할을 합니다.
 
@@ -38,7 +34,7 @@ League Studio의 Backend Server는 시스템의 **중앙 상태 관리자** 역�
 
 Observer Tool은 자동 수집 데이터와 별개로 대회 운영자가 직접 설정하거나 수정해야 하는 정보를 Server에 전달합니다.
 
-Server는 이러한 데이터를 하나의 `GameState`로 통합하여 관리하고, Overlay에 WebSocket으로 전달합니다. Overlay는 전달받은 상태를 기반으로 방송용 UI를 렌더링하며 OBS Studio의 Browser Source 등에서 사용할 수 있습니다.
+Server는 이러한 데이터를 하나의 `GameState`로 통합하여 관리하고, Overlay에 WebSocket으로 전달합니다. Overlay는 전달받은 상태를 기반으로 방송용 UI를 렌더링하며 OBS Studio의 Browser Source로 사용할 수 있습니다.
 
 ### Backend Server
 

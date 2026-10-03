@@ -1,5 +1,6 @@
 import React from "react";
 import type { GameState, PlayerState, WardType } from "@league-studio/shared-types";
+import { championIcon, itemIcon } from "../../constants/ddragon";
 
 type BottomScoreboardProps = {
     gameState: GameState;
@@ -13,11 +14,6 @@ const GAP = {
     center : 40,
 };
 const spacer = (width: number) : React.CSSProperties => ({width, flexShrink: 0 });
-
-const DDRAGON_VERSION = "14.24.1";
-const DDRAGON_IMG =`https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VERSION}/img`;
-const championIcon = (name: string) => `${DDRAGON_IMG}/champion/${name}.png`;
-const itemIcon = (id: number) => `${DDRAGON_IMG}/item/${id}.png`;
 
 const WARD_ITEM_ID: Record<WardType, number> = {
     stealth: 3340,

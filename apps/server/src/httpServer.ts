@@ -1,9 +1,20 @@
 import { createServer } from "node:http";
+import { fileURLToPath } from "node:url";
+import sirv from "sirv";
 import { httpPort } from "./config";
 import { getCurrentGameState } from "./services/gameStateProvider";
 
-// 임시 HTTP 서버: 현재 GameState를 JSON으로 확인하기 위한 검증용 엔드포인트.
-// WebSocket(8081)과 별도 포트(3000)에서 동작하며, 기존 코드에 영향을 주지 않는다.
+// src/httpServer.ts와 dist/index.js 모두에서
+// apps/overlay/dist를 가리키는 경로.
+const overlayDistPath = fileURLToPath(
+  new URL("../../overlay/dist/", import.meta.url),
+);
+
+const serveOverlay = sirv(overlayDistPath, {
+  etag: true,
+  maxAge: 0,
+});
+
 const server = createServer(async (req, res) => {
   if (req.method === "GET" && req.url === "/game-state") {
     try {
@@ -24,10 +35,19 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  res.writeHead(404, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ error: "Not Found" }));
+  if (req.method === "GET" || req.method === "HEAD") {
+    serveOverlay(req, res, () => {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not Found" }));
+    });
+    return;
+  }
+
+  res.writeHead(405, { Allow: "GET, HEAD" });
+  res.end();
 });
 
 server.listen(httpPort, () => {
   console.log(`HTTP server running on http://localhost:${httpPort}`);
+  console.log(`Overlay available at http://localhost:${httpPort}/`);
 });

@@ -7,5 +7,8 @@
     "dev:server": "pnpm --filter server dev",
     "build:overlay": "pnpm --filter overlay build",
     "build:server": "pnpm --filter server build"
+  },
+  "devDependencies": {
+    "resedit-cli": "^3.1.1"
   }
 }

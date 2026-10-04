@@ -70,7 +70,13 @@ export type WardType =
 export type ItemSlot = number | null
 
 export interface PlayerState {
-  championName: string; //Data Dragon _챔피언 키 
+  
+  /**
+   * Data Dragon 챔피언 식별자 (이미지 경로에 그대로 사용)
+   * - 화면 표시용 이름이 아닌 영문 ID: "MissFortune", "MonkeyKing"(오공), "Kaisa"
+   * - Live Client API의 championName(현지화된 표시 이름)을 그대로 넣지 말고 변환해서 전달 
+   */
+  championName: string;
 
   kills : number;
   deaths : number;

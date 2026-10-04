@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# League Studio Overlay
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+League Studio의 **Broadcast Overlay** 애플리케이션입니다.
 
-Currently, two official plugins are available:
+Backend Server에서 WebSocket으로 전달되는 `GameState`를 기반으로 League of Legends 관전 방송에 사용되는 UI를 렌더링합니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+전체 프로젝트 구조 및 실행 방법은 루트 [README](../../README.md)를 참고해주세요.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Role
 
-## Expanding the ESLint configuration
+Overlay는 경기 데이터를 직접 수집하지 않고, Backend Server에서 전달받은 상태를 화면에 표현하는 역할을 담당합니다.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+현재 주요 UI는 다음과 같습니다.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 상단 경기 스코어보드
+- 팀 정보
+- 킬 및 글로벌 골드
+- 경기 시간 및 오브젝트 상태
+- 하단 선수 정보 패널
+- 챔피언
+- K/D/A
+- CS
+- 아이템
+- 와드 / 장신구
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Tech Stack
+
+- React
+- TypeScript
+- Vite
+- Riot Data Dragon
+- WebSocket
+
+---
+
+## Shared Types
+
+Overlay와 Backend Server는 공용 패키지인 `@league-studio/shared-types`를 통해 동일한 `GameState` 구조를 공유합니다.
+
+```text
+packages/shared-types/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+새로운 경기 데이터가 필요한 경우 Overlay 내부에 별도의 데이터 구조를 임의로 정의하기보다, 필요한 경우 shared types를 먼저 확장한 뒤 사용하는 것을 기본으로 합니다.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Development
+
+저장소 루트에서 실행합니다.
+
+```bash
+pnpm dev:overlay
+```
+
+또는 Overlay 디렉터리에서 직접 실행할 수 있습니다.
+
+```bash
+pnpm dev
+```
+
+---
+
+## Build
+
+저장소 루트:
+
+```bash
+pnpm build:overlay
+```
+
+Overlay 디렉터리:
+
+```bash
+pnpm build
 ```

@@ -19,5 +19,3 @@ pnpm-debug.log*
 
 # exception
 !.env.example
-
-docs/

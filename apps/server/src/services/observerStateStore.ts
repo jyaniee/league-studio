@@ -60,7 +60,7 @@ function cloneState(): StoredObserverState {
     };
 }
 
-function resetObserverState(): void {
+export function resetObserverState(): void {
     state = createEmptyObserverState();
 }
 

@@ -9,9 +9,10 @@ import type {
     ObserverStatePatchPayload,
 } from "@league-studio/shared-types";
 import { 
-    addObserverMatchInfo, addObserverStatePatch, getObserverState
+    addObserverMatchInfo, addObserverStatePatch, getObserverState, resetObserverState,
 } from "./services/observerStateStore";
 import { send } from "node:process";
+// import { send } from "node:process";
 
 function sendJson(
     res: ServerResponse,
@@ -46,6 +47,22 @@ export function startObserverIngestServer(port: number): void {
             sendJson(res, 200, {
                 ok: true,
                 state: getObserverState(),
+            });
+
+            return;
+        }
+
+        if (req.method === "POST" && url === "/observer/reset"){
+            resetObserverState();
+
+            const state = getObserverState();
+
+            console.log("[OBSERVER STATE RESET]", state);
+
+            sendJson(res, 200, {
+                ok: true,
+                status: "reset",
+                state,
             });
 
             return;

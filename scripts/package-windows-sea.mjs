@@ -123,9 +123,12 @@ await inject(exePath, "NODE_SEA_BLOB", await readFile(blobPath), {
   sentinelFuse: "NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2",
 });
 
-console.log("[4/4] mock 설정을 생성합니다.");
+console.log("[4/4] 배포용 기본 설정을 복사합니다.");
 
-await writeFile(join(outputDir, ".env"), "USE_MOCK=true\n");
+await copyFile(
+  join(serverDir, ".env.distribution"),
+  join(outputDir, ".env"),
+);
 
 console.log("\n생성 완료:");
 console.log(outputDir);

@@ -6,6 +6,10 @@
     "dev:overlay": "pnpm --filter overlay dev",
     "dev:server": "pnpm --filter server dev",
     "build:overlay": "pnpm --filter overlay build",
-    "build:server": "pnpm --filter server build"
+    "build:server": "pnpm --filter server build",
+    "package:windows": "node scripts/package-windows-sea.mjs"
+  },
+  "devDependencies": {
+    "resedit-cli": "^3.1.1"
   }
 }

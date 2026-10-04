@@ -75,6 +75,26 @@ await writeFile(
 // 개인 개발 설정을 복사하지 않고 mock 실험 설정을 만듭니다.
 await writeFile(join(serverDir, ".env"), "USE_MOCK=true\n");
 
+if (process.platform === "win32") {
+  const runtimeDir = join(outputDir, "runtime");
+  await mkdir(runtimeDir, { recursive: true });
+
+  // 현재 빌드 PC에서 사용하는 Node.js 실행 파일을 포함합니다.
+  await copyFile(process.execPath, join(runtimeDir, "node.exe"));
+
+  const launcher = [
+    "@echo off",
+    "setlocal",
+    'cd /d "%~dp0"',
+    '"%~dp0runtime\\node.exe" "%~dp0apps\\server\\dist\\index.js"',
+    "if errorlevel 1 pause",
+    "endlocal",
+    "",
+  ].join("\r\n");
+
+  await writeFile(join(outputDir, "start.cmd"), launcher);
+}
+
 console.log("\n실험용 배포 폴더 생성 완료:");
 console.log(outputDir);
 console.log("\n다음 명령을 순서대로 실행하세요:");

@@ -73,9 +73,6 @@ execFileSync(
 await access(join(overlayDist, "index.html"));
 await access(appIconPath);
 
-await access(join(overlayDist, "index.html"));
-await access(appIconPath);
-
 // SEA에 넣을 리소스 이름과 실제 파일 경로를 수집합니다.
 const assets = {};
 

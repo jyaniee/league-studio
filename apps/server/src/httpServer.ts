@@ -1,19 +1,9 @@
 import { createServer } from "node:http";
-import { fileURLToPath } from "node:url";
-import sirv from "sirv";
+import { createOverlayHandler } from "./overlayAssets";
 import { httpPort } from "./config";
 import { getCurrentGameState } from "./services/gameStateProvider";
 
-// src/httpServer.ts와 dist/index.js 모두에서
-// apps/overlay/dist를 가리키는 경로.
-const overlayDistPath = fileURLToPath(
-  new URL("../../overlay/dist/", import.meta.url),
-);
-
-const serveOverlay = sirv(overlayDistPath, {
-  etag: true,
-  maxAge: 0,
-});
+const serveOverlay = createOverlayHandler();
 
 const server = createServer(async (req, res) => {
   if (req.method === "GET" && req.url === "/game-state") {

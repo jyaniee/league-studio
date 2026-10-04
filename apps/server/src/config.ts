@@ -1,9 +1,7 @@
 import { config as loadEnv } from "dotenv";
-import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { envFilePath } from "./paths";
 
-const serverRoot = resolve(fileURLToPath(import.meta.url), "..", "..");
-loadEnv({ path: resolve(serverRoot, ".env") });
+loadEnv({ path: envFilePath });
 
 const DEFAULT_INTERVAL_MS = 1000;
 const DEFAULT_WS_PORT = 8081;

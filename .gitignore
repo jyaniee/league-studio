@@ -19,4 +19,4 @@ pnpm-debug.log*
 
 # exception
 !.env.example
-!.env.distribution
+!apps/server/.env.distribution

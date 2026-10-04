@@ -54,6 +54,25 @@ const serverRequire = createRequire(join(serverDir, "package.json"));
 const { build } = serverRequire("esbuild");
 const { inject } = serverRequire("postject");
 
+console.log("[1/8] 오버레이를 빌드합니다.");
+
+execFileSync(
+  "cmd.exe",
+  [
+    "/d",
+    "/s",
+    "/c",
+    "pnpm build:overlay",
+  ],
+  {
+    cwd: projectRoot,
+    stdio: "inherit",
+  },
+);
+
+await access(join(overlayDist, "index.html"));
+await access(appIconPath);
+
 await access(join(overlayDist, "index.html"));
 await access(appIconPath);
 
@@ -235,7 +254,7 @@ const configPath = join(workDir, "sea-config.json");
 const baseExePath = join(workDir, "node-base.exe");
 const exePath = join(outputDir, "LeagueStudioServer.exe");
 
-console.log("[1/7] 서버와 의존성을 묶습니다.");
+console.log("[1/8] 서버와 의존성을 묶습니다.");
 
 await build({
   absWorkingDir: serverDir,
@@ -264,7 +283,7 @@ await build({
   logLevel: "info",
 });
 
-console.log("[2/7] SEA 데이터를 생성합니다.");
+console.log("[2/8] SEA 데이터를 생성합니다.");
 
 await writeFile(
   configPath,
@@ -288,7 +307,7 @@ execFileSync(process.execPath, ["--experimental-sea-config", configPath], {
   stdio: "inherit",
 });
 
-console.log("[3/7] LeagueStudioServer.exe를 생성합니다.");
+console.log("[3/8] LeagueStudioServer.exe를 생성합니다.");
 
 await copyFile(process.execPath, baseExePath);
 
@@ -310,14 +329,14 @@ await inject(exePath, "NODE_SEA_BLOB", await readFile(blobPath), {
   sentinelFuse: "NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2",
 });
 
-console.log("[4/7] 배포용 기본 설정을 복사합니다.");
+console.log("[4/8] 배포용 기본 설정을 복사합니다.");
 
 await copyFile(
   join(serverDir, ".env.distribution"),
   join(outputDir, ".env"),
 );
 
-console.log("[5/7] 배포 정보를 생성합니다.");
+console.log("[5/8] 배포 정보를 생성합니다.");
 
 await writeFile(
   join(outputDir, "README.txt"),
@@ -373,7 +392,7 @@ League of Legends 및 관련 게임 자산의 권리는 해당 권리자에게 �
   "utf8",
 );
 
-console.log("[6/7] 오픈소스 라이선스 고지를 생성합니다.");
+console.log("[6/8] 오픈소스 라이선스 고지를 생성합니다.");
 
 const thirdPartyNotices = await generateThirdPartyNotices();
 
@@ -383,7 +402,7 @@ await writeFile(
   "utf8",
 );
 
-console.log("[7/7] ZIP 배포본을 생성합니다.");
+console.log("[7/8] ZIP 배포본을 생성합니다.");
 
 execFileSync(
   "powershell.exe",

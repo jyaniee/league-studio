@@ -48,7 +48,6 @@ export function startAgentIngestServer(port: number): void {
         const result = addAgentObjectiveEvent(payload);
 
         if (result.status === "applied"){
-          console.log("[AGENT OBEJCTIVE STATE UPDATED]", result.state);
           console.log("[AGENT OBJECTIVE STATE UPDATED]", result.state);
         }else if(result.status === "duplicate") {
           console.warn("[AGENT OBJECTIVE EVENT DUPLICATED]", result.key);
@@ -82,7 +81,7 @@ export function startAgentIngestServer(port: number): void {
               status: result.status,
             });
           } catch (error) {
-            console.error("Failed to receive agent objective event:", error);
+            console.error("Failed to receive agent tower event:", error);
 
             sendJson(res, 400, {
               ok: false,

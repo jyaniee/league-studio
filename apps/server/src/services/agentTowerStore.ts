@@ -51,13 +51,14 @@ export function addAgentTowerEvent(
   payload: AgentTowerEventPayload,
 ): AddAgentTowerEventResult {
   const event = payload.event;
+
+
+  // Agent의 matchId는 Observer의 matchId와 별도 출처를 사용함. (서로 동기화하는 로직이 필요한 상태 2026-10-05)
+  // Observer에서 경기 전환 시 Store를 초기화하고,
+  // Agent 이벤트에서는 Agent가 전달한 matchId를 기준으로 동기화한다.
+  syncAgentTowerMatch(payload.matchId);
+
   const key = `${payload.matchId}:${event.eventId}`;
-
-  if (currentMatchId !== null && currentMatchId !== payload.matchId) {
-    resetAgentTowerStore();
-  }
-
-  currentMatchId = payload.matchId;
 
   if (processedEventKeys.has(key)) {
     return {
@@ -104,4 +105,13 @@ export function mergeAgentTowersIntoGameState(
 
     updatedAt: new Date().toISOString(),
   };
+}
+
+export function syncAgentTowerMatch(matchId: string): void {
+  if (currentMatchId === matchId) {
+    return;
+  }
+
+  resetAgentTowerStore();
+  currentMatchId = matchId;
 }

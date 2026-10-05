@@ -65,7 +65,8 @@ export interface GameObjectives {
 export type WardType =
 | "stealth" // 기본 와드 (투명 와드)
 | "oracle" // 예언자의 렌즈
-| "farsight"; // 망원형 개조 
+| "farsight" // 망원형 개조
+| "effigy"; // 피들스틱 허수아비 
 
 export type ItemSlot = number | null
 

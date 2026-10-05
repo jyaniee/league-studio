@@ -29,6 +29,7 @@ const WARD_BY_ITEM_ID: Record<number, WardType> = {
   3340: "stealth",
   3364: "oracle",
   3363: "farsight",
+  3330: "effigy",
 };
 
 function countTeamObjective(

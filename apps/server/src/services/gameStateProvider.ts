@@ -3,6 +3,7 @@ import { getMockGameState } from "../mock/gameState";
 import { getLiveClientGameState } from "./gameStateService";
 import { mergeAgentObjectivesIntoGameState } from "./agentObjectiveStore";
 import { mergeObserverStateIntoGameState } from "./observerStateStore";
+import { mergeAgentTowersIntoGameState } from "./agentTowerStore";
 /**
  * WebSocket/HTTP에 제공할 현재 GameState 스냅샷.
  * USE_MOCK=false일 때 Live Client API를 사용하고, 실패 시 mock으로 fallback한다.
@@ -16,9 +17,10 @@ export async function getCurrentGameState(): Promise<GameState | null> {
   try {
     const liveGameState = await getLiveClientGameState();
     const withAgentObjectives = mergeAgentObjectivesIntoGameState(liveGameState);
+    const withAgentTowers = mergeAgentTowersIntoGameState(withAgentObjectives);
     // return mergeAgentObjectivesIntoGameState(liveGameState);
 
-    return mergeObserverStateIntoGameState(withAgentObjectives);
+    return mergeObserverStateIntoGameState(withAgentTowers);
   } catch (error) {
     console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
     // return getMockGameState();

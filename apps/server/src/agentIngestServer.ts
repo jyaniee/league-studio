@@ -4,8 +4,10 @@ import {
   type ServerResponse,
 } from "node:http";
 import { Buffer } from "node:buffer";
-import type { AgentObjectiveEventPayload } from "@league-studio/shared-types";
+import type { AgentObjectiveEventPayload,AgentTowerEventPayload } from "@league-studio/shared-types";
 import { addAgentObjectiveEvent } from "./services/agentObjectiveStore";
+import { addAgentTowerEvent } from "./services/agentTowerStore";
+
 
 function sendJson(
   res: ServerResponse,
@@ -47,12 +49,12 @@ export function startAgentIngestServer(port: number): void {
 
         if (result.status === "applied"){
           console.log("[AGENT OBEJCTIVE STATE UPDATED]", result.state);
+          console.log("[AGENT OBJECTIVE STATE UPDATED]", result.state);
         }else if(result.status === "duplicate") {
           console.warn("[AGENT OBJECTIVE EVENT DUPLICATED]", result.key);
         }
 
         sendJson(res, 200, { ok: true, status: result.status});
-
       } catch (error) {
         console.error("Failed to receive agent objective event:", error);
         sendJson(res, 400, { ok: false, error: "Invalid JSON payload" });
@@ -60,6 +62,36 @@ export function startAgentIngestServer(port: number): void {
 
       return;
     }
+
+        if (req.method === "POST" && req.url === "/agent/tower-events") {
+          try {
+            const payload = await readJsonBody<AgentTowerEventPayload>(req);
+
+            console.log("[AGENT TOWER EVENT]", payload);
+
+            const result = addAgentTowerEvent(payload);
+
+            if (result.status === "applied") {
+              console.log("[AGENT TOWER STATE UPDATED]", result.state);
+            } else if (result.status === "duplicate") {
+              console.warn("[AGENT TOWER EVENT DUPLICATED]", result.key);
+            }
+
+            sendJson(res, 200, {
+              ok: true,
+              status: result.status,
+            });
+          } catch (error) {
+            console.error("Failed to receive agent objective event:", error);
+
+            sendJson(res, 400, {
+              ok: false,
+              error: "Invalid JSON payload",
+            });
+          }
+          
+          return;
+        }
 
     sendJson(res, 404, { ok: false, error: "Not found" });
   });

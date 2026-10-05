@@ -4,15 +4,13 @@ export type AgentObjectiveType =
   | "dragon"
   | "baron"
   | "herald"
-  | "voidgrub"
-  | "tower";
+  | "voidgrub";
 
 export type AgentObjectiveRawEventName =
   | "DragonKill"
   | "BaronKill"
   | "HeraldKill"
-  | "HordeKill"
-  | "TurretKilled";
+  | "HordeKill";
 
 export type AgentObjectiveEvent = {
   eventId: number;
@@ -31,4 +29,23 @@ export type AgentObjectiveEventPayload = {
   agentId: string;
   sentAt: string;
   event: AgentObjectiveEvent;
+};
+
+export type AgentTowerEvent = {
+  eventId: number;
+  eventTime: number;
+
+  destroyedTeam: TeamSide | "unknown";
+  scoringTeam: TeamSide | "unknown";
+
+  rawEventName: "TurretKilled";
+  turretKilled?: string;
+  killerName?: string;
+};
+
+export type AgentTowerEventPayload = {
+  matchId: string;
+  agentId: string;
+  sentAt: string;
+  event: AgentTowerEvent;
 };

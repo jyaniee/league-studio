@@ -65,12 +65,21 @@ export interface GameObjectives {
 export type WardType =
 | "stealth" // 기본 와드 (투명 와드)
 | "oracle" // 예언자의 렌즈
-| "farsight"; // 망원형 개조 
+| "farsight" // 망원형 개조
+| "effigy"; // 피들스틱 허수아비 
 
 export type ItemSlot = number | null
 
+export type PlayerPosition =
+  | "TOP"
+  | "JUNGLE"
+  | "MIDDLE"
+  | "BOTTOM"
+  | "UTILITY";
+
 export interface PlayerState {
-  
+  position: PlayerPosition;
+
   /**
    * Data Dragon 챔피언 식별자 (이미지 경로에 그대로 사용)
    * - 화면 표시용 이름이 아닌 영문 ID: "MissFortune", "MonkeyKing"(오공), "Kaisa"
@@ -105,7 +114,6 @@ export interface TeamState {
   barons: number;
   
 }
-
 
 export interface GameState {
   phase: GamePhase;

@@ -16,10 +16,20 @@ export interface LiveClientEventData {
   Events: LiveClientEvent[];
 }
 
+export interface LiveClientItem {
+  itemID: number;
+  slot: number;
+  count?: number;
+  displayName?: string;
+}
+
 export interface LiveClientPlayer {
   summonerName: string;
   championName: string;
+  rawChampionName?: string;
+  position?: string;
   team: "ORDER" | "CHAOS";
+  items?: LiveClientItem[];
   scores?: {
     kills?: number;
     deaths?: number;

@@ -10,8 +10,8 @@ import { mergeAgentTowersIntoGameState } from "./agentTowerStore";
  */
 export async function getCurrentGameState(): Promise<GameState | null> {
   if (process.env.USE_MOCK !== "false") {
-    //return getMockGameState();
-    return mergeObserverStateIntoGameState(getMockGameState()); // mock 상태에서도 Observer match-info 반영 가능하도록 수정함 2026-06-16:jhan
+    // mock 상태에서도 Observer match-info 반영 가능하도록 수정함 2026-06-16:jhan
+    return mergeObserverStateIntoGameState(getMockGameState());
   }
 
   try {
@@ -23,7 +23,6 @@ export async function getCurrentGameState(): Promise<GameState | null> {
     return mergeObserverStateIntoGameState(withAgentTowers);
   } catch (error) {
     console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
-    // return getMockGameState();
     return mergeObserverStateIntoGameState(getMockGameState());
   }
 }

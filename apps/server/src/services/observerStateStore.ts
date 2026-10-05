@@ -6,7 +6,8 @@ import type {
     ObserverTeamInfo,
     TeamSide,
 } from "@league-studio/shared-types";
-import { stat } from "fs";
+import { resetAgentTowerStore } from "./agentTowerStore";
+import { resetAgentObjectiveStore } from "./agentObjectiveStore";
 
 const MIN_CONFIDENCE = 0.85;
 
@@ -65,8 +66,12 @@ export function resetObserverState(): void {
 }
 
 function ensureMatch(payload: { matchId: string; observerId: string }): void {
-    if (state.matchId !== null && state.matchId !== payload.matchId) {
+    // 최초 null -> match 전환에서는 초기화하지 않음
+    // Match Info 적용 전에 Agent 이벤트가 먼저 수집됐을 수 있기 때문.
+    if(state.matchId !== null && state.matchId !== payload.matchId) {
         resetObserverState();
+        resetAgentObjectiveStore();
+        resetAgentTowerStore();
     }
 
     state.matchId = payload.matchId;

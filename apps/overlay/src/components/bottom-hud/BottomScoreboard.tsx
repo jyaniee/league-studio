@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { GameState, PlayerState, WardType } from "@league-studio/shared-types";
+import type { GameState, PlayerPosition, PlayerState, WardType } from "@league-studio/shared-types";
 import { championIcon, itemIcon } from "../../constants/ddragon";
 
 type BottomScoreboardProps = {
@@ -20,7 +20,13 @@ const WARD_ITEM_ID: Record<WardType, number> = {
     oracle: 3364,
     farsight: 3363,
 };
-    const ROW_COUNT = 5;
+    const ROW_POSITIONS: PlayerPosition[] = [
+        "TOP",
+        "JUNGLE",
+        "MIDDLE",
+        "BOTTOM",
+        "UTILITY",
+    ];
     const ITEM_SLOT_COUNT = 6;
 
 const toSixSlots = (items: PlayerState["items"] = []) =>
@@ -66,18 +72,19 @@ function ChampionPortrait({ name }: {name?: string}) {
     export default function BottomScoreboard({gameState}: BottomScoreboardProps) {
     const blueplayers = gameState.blueTeam.players ?? [];
     const redplayers = gameState.redTeam.players ??[];
-    const rows = Array.from({ length: ROW_COUNT }, (_, i) => i);
+    const playerAt = (players: PlayerState[], position: PlayerPosition) =>
+        players.find((player) => player.position === position);
 
     return (
         <div style={styles.container}>
             <div style={styles.header}>League Studio <div style={styles.divider}></div></div>
 
-        {rows.map ((index) => {
-            const blue = blueplayers [index];
-            const red = redplayers[index];
+        {ROW_POSITIONS.map((position, index) => {
+            const blue = playerAt(blueplayers, position);
+            const red = playerAt(redplayers, position);
             
             return (
-                <div key={index} style={styles.rowWrapper}>
+                <div key={position} style={styles.rowWrapper}>
 
 
                    {/* [좌측 Anchor]: 블루 팀 영역 ( flex: 1) */}

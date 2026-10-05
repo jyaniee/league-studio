@@ -69,8 +69,16 @@ export type WardType =
 
 export type ItemSlot = number | null
 
+export type PlayerPosition =
+  | "TOP"
+  | "JUNGLE"
+  | "MIDDLE"
+  | "BOTTOM"
+  | "UTILITY";
+
 export interface PlayerState {
-  
+  position: PlayerPosition;
+
   /**
    * Data Dragon 챔피언 식별자 (이미지 경로에 그대로 사용)
    * - 화면 표시용 이름이 아닌 영문 ID: "MissFortune", "MonkeyKing"(오공), "Kaisa"
@@ -105,7 +113,6 @@ export interface TeamState {
   barons: number;
   
 }
-
 
 export interface GameState {
   phase: GamePhase;

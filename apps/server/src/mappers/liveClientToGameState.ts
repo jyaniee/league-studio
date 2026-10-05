@@ -1,10 +1,11 @@
 import type {
   DragonType,
   GameState,
-  PlayerItem,
+  ItemSlot,
   PlayerPosition,
   PlayerState,
   TeamSide,
+  WardType,
 } from "@league-studio/shared-types";
 import type { LiveClientRawData } from "../data-sources/liveClientTypes";
 import { calculateObjectives } from "../calculators/objectiveTimers";
@@ -15,6 +16,7 @@ type LiveClientItem = NonNullable<LiveClientPlayer["items"]>[number];
 
 const CHAMPION_KEY_PREFIX = "game_character_displayname_";
 const TRINKET_SLOT = 6;
+const ITEM_SLOT_COUNT = 6;
 const POSITION_ORDER: PlayerPosition[] = [
   "TOP",
   "JUNGLE",
@@ -22,6 +24,12 @@ const POSITION_ORDER: PlayerPosition[] = [
   "BOTTOM",
   "UTILITY",
 ];
+
+const WARD_BY_ITEM_ID: Record<number, WardType> = {
+  3340: "stealth",
+  3364: "oracle",
+  3363: "farsight",
+};
 
 function countTeamObjective(
   events: LiveClientEvent[],
@@ -121,11 +129,23 @@ function toChampionKey(rawChampionName?: string): string {
   return rawChampionName.slice(CHAMPION_KEY_PREFIX.length);
 }
 
-function mapPlayerItems(items: LiveClientItem[] | undefined): {
-  items: PlayerItem[];
-  trinketItemId?: number;
+function emptyItemSlots(): ItemSlot[] {
+  return Array.from({ length: ITEM_SLOT_COUNT }, () => null);
+}
+
+function toWard(itemId: number | undefined): WardType | null {
+  if (itemId === undefined) {
+    return null;
+  }
+
+  return WARD_BY_ITEM_ID[itemId] ?? null;
+}
+
+function mapPlayerLoadout(items: LiveClientItem[] | undefined): {
+  items: ItemSlot[];
+  ward: WardType | null;
 } {
-  const inventory: PlayerItem[] = [];
+  const inventory = emptyItemSlots();
   let trinketItemId: number | undefined;
 
   for (const item of items ?? []) {
@@ -134,58 +154,62 @@ function mapPlayerItems(items: LiveClientItem[] | undefined): {
       continue;
     }
 
-    if (item.slot >= 0 && item.slot <= 5) {
-      inventory.push({
-        itemId: item.itemID,
-        slot: item.slot,
-      });
+    if (item.slot >= 0 && item.slot < ITEM_SLOT_COUNT) {
+      inventory[item.slot] = item.itemID;
     }
   }
 
-  inventory.sort((a, b) => a.slot - b.slot);
-
-  return { items: inventory, trinketItemId };
+  return { items: inventory, ward: toWard(trinketItemId) };
 }
 
-function comparePlayers(a: PlayerState, b: PlayerState): number {
-  if (a.side !== b.side) {
-    return a.side === "blue" ? -1 : 1;
-  }
+type RankedPlayer = {
+  side: TeamSide;
+  player: PlayerState;
+};
 
-  return POSITION_ORDER.indexOf(a.position) - POSITION_ORDER.indexOf(b.position);
-}
+function mapRankedPlayers(players: LiveClientPlayer[]): RankedPlayer[] {
+  return players.flatMap((player) => {
+    const position = toPlayerPosition(player.position);
 
-function mapPlayers(players: LiveClientPlayer[]): PlayerState[] {
-  return players
-    .flatMap((player) => {
-      const position = toPlayerPosition(player.position);
+    if (!position) {
+      return [];
+    }
 
-      if (!position) {
-        return [];
-      }
+    const { items, ward } = mapPlayerLoadout(player.items);
 
-      const { items, trinketItemId } = mapPlayerItems(player.items);
-
-      return [
-        {
-          side: toTeamSide(player.team),
+    return [
+      {
+        side: toTeamSide(player.team),
+        player: {
           position,
-          championKey: toChampionKey(player.rawChampionName),
+          championName: toChampionKey(player.rawChampionName),
           kills: player.scores?.kills ?? 0,
           deaths: player.scores?.deaths ?? 0,
           assists: player.scores?.assists ?? 0,
-          creepScore: player.scores?.creepScore ?? 0,
+          cs: player.scores?.creepScore ?? 0,
           items,
-          trinketItemId,
+          ward,
         },
-      ];
-    })
-    .sort(comparePlayers);
+      },
+    ];
+  });
+}
+
+function playersForSide(players: RankedPlayer[], side: TeamSide): PlayerState[] {
+  return players
+    .filter((entry) => entry.side === side)
+    .sort(
+      (a, b) =>
+        POSITION_ORDER.indexOf(a.player.position) -
+        POSITION_ORDER.indexOf(b.player.position),
+    )
+    .map((entry) => entry.player);
 }
 
 export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
   const gameTime = raw.gameStats.gameTime;
   const events = addKillerTeamToEvents(raw.eventData.Events ?? [], raw.players);
+  const rankedPlayers = mapRankedPlayers(raw.players);
 
   return {
     phase: "in-game",
@@ -201,6 +225,7 @@ export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
       voidgrubs: countTeamVoidgrubs(events, "ORDER"),
       heralds: countTeamObjective(events, "ORDER", "HeraldKill"),
       barons: countTeamObjective(events, "ORDER", "BaronKill"),
+      players: playersForSide(rankedPlayers, "blue"),
     },
     redTeam: {
       side: "red",
@@ -213,8 +238,8 @@ export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
       voidgrubs: countTeamVoidgrubs(events, "CHAOS"),
       heralds: countTeamObjective(events, "CHAOS", "HeraldKill"),
       barons: countTeamObjective(events, "CHAOS", "BaronKill"),
+      players: playersForSide(rankedPlayers, "red"),
     },
-    players: mapPlayers(raw.players),
     objectives: calculateObjectives(gameTime, events),
     source: "live-client-api",
     updatedAt: new Date().toISOString(),

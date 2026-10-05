@@ -69,8 +69,16 @@ export type WardType =
 
 export type ItemSlot = number | null
 
+export type PlayerPosition =
+  | "TOP"
+  | "JUNGLE"
+  | "MIDDLE"
+  | "BOTTOM"
+  | "UTILITY";
+
 export interface PlayerState {
-  
+  position: PlayerPosition;
+
   /**
    * Data Dragon 챔피언 식별자 (이미지 경로에 그대로 사용)
    * - 화면 표시용 이름이 아닌 영문 ID: "MissFortune", "MonkeyKing"(오공), "Kaisa"
@@ -106,44 +114,12 @@ export interface TeamState {
   
 }
 
-export type PlayerPosition =
-  | "TOP"
-  | "JUNGLE"
-  | "MIDDLE"
-  | "BOTTOM"
-  | "UTILITY";
-
-export interface PlayerItem {
-  itemId: number;
-  slot: number; // 인벤토리 칸. 0-5
-  imageUrl?: string; // Data Dragon 아이템 이미지
-}
-
-export interface PlayerState {
-  side: TeamSide;
-  position: PlayerPosition;
-  championKey: string; // rawChampionName에서 추출한 영문 키
-  championImageUrl?: string; // Data Dragon 챔피언 초상화
-
-  kills: number;
-  deaths: number;
-  assists: number;
-  creepScore: number; // Live Client creepScore. 10단위로 제공됨
-
-  items: PlayerItem[]; // slot 0-5. 빈 칸은 포함하지 않음
-  trinketItemId?: number; // slot 6. 3340 와드, 3364 렌즈, 3363 망원형 개조
-  trinketImageUrl?: string; // Data Dragon 장신구 이미지
-}
-
-
 export interface GameState {
   phase: GamePhase;
   gameTime: number;
 
   blueTeam: TeamState;
   redTeam: TeamState;
-
-  players: PlayerState[]; // 블루 TOP~UTILITY, 레드 TOP~UTILITY
 
   objectives: GameObjectives;
 

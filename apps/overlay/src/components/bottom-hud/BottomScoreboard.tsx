@@ -19,6 +19,7 @@ const WARD_ITEM_ID: Record<WardType, number> = {
     stealth: 3340,
     oracle: 3364,
     farsight: 3363,
+    effigy: 3330,
 };
     const ROW_POSITIONS: PlayerPosition[] = [
         "TOP",

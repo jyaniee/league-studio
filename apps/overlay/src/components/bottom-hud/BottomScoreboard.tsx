@@ -14,6 +14,7 @@ const GAP = {
     center : 40,
 };
 const spacer = (width: number) : React.CSSProperties => ({width, flexShrink: 0 });
+const flexSpacer = (width: number) : React.CSSProperties => ({ width, flexShrink: 1, minWidth: 0});
 
 const WARD_ITEM_ID: Record<WardType, number> = {
     stealth: 3340,
@@ -91,7 +92,7 @@ function ChampionPortrait({ name }: {name?: string}) {
                    {/* [좌측 Anchor]: 블루 팀 영역 ( flex: 1) */}
                     <div style={styles.blueSide}>
                     <WardSlot ward={blue?.ward} />
-                    <div style={spacer(GAP.wardToItems)}></div>
+                    <div style={flexSpacer(GAP .wardToItems)}></div>
 
                     <ItemSlots items={blue?.items} />
 
@@ -123,7 +124,7 @@ function ChampionPortrait({ name }: {name?: string}) {
 
                         <ItemSlots items={red?.items} />
 
-                        <div style={spacer(GAP.wardToItems)}></div>
+                        <div style={flexSpacer(GAP .wardToItems)}></div>
 
                         <WardSlot ward={red?.ward} />
 
@@ -171,6 +172,7 @@ function ChampionPortrait({ name }: {name?: string}) {
 
         blueSide: {
                 flex: 1,
+                minWidth: 0,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
@@ -178,6 +180,7 @@ function ChampionPortrait({ name }: {name?: string}) {
 
         redSide: {
                 flex: 1,
+                minWidth: 0, 
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-start',

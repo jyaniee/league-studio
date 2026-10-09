@@ -8,13 +8,13 @@ type BottomScoreboardProps = {
 const EDGE =12;
 const GAP = {
     wardToItems: 30,
-    itemsToStats: 18,
+    itemsToStats: 6,
     kdaToCs: 8,
     csToChampion: 10,
     center : 40,
 };
 const spacer = (width: number) : React.CSSProperties => ({width, flexShrink: 0 });
-const flexSpacer = (width: number) : React.CSSProperties => ({ width, flexShrink: 1, minWidth: 0});
+const flexSpacer = (minWidth: number) : React.CSSProperties => ({ flex: 1, minWidth });
 
 const WARD_ITEM_ID: Record<WardType, number> = {
     stealth: 3340,
@@ -92,11 +92,11 @@ function ChampionPortrait({ name }: {name?: string}) {
                    {/* [좌측 Anchor]: 블루 팀 영역 ( flex: 1) */}
                     <div style={styles.blueSide}>
                     <WardSlot ward={blue?.ward} />
-                    <div style={flexSpacer(GAP .wardToItems)}></div>
+                    <div style={spacer(GAP .wardToItems)}></div>
 
                     <ItemSlots items={blue?.items} />
 
-                    <div style={spacer(GAP.itemsToStats)}></div>
+                    <div style={flexSpacer(GAP.itemsToStats)}></div>
 
                     <div style={styles.statsGroup}>
                         <span style={styles.kdaText}>{kdaText(blue)}</span>
@@ -120,11 +120,11 @@ function ChampionPortrait({ name }: {name?: string}) {
                             <span style={{...styles.csTest,textAlign: 'left'}}>{csText(red)}</span>
                             <span style={styles.kdaText}>{kdaText(red)}</span>
                         </div>
-                        <div style={spacer(GAP.itemsToStats)}></div>
+                        <div style={flexSpacer(GAP.itemsToStats)}></div>
 
                         <ItemSlots items={red?.items} />
 
-                        <div style={flexSpacer(GAP .wardToItems)}></div>
+                        <div style={spacer(GAP .wardToItems)}></div>
 
                         <WardSlot ward={red?.ward} />
 

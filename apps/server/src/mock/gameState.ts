@@ -109,10 +109,7 @@ const redPlayers: PlayerState[] = [
   },
 ];
 
-export function getMockGameState(): GameState {
-  time += 1;
-
-  const mockEvents = [
+const mockEventTimeline = [
     {
       EventID: 1,
       EventName: "DragonKill",
@@ -125,8 +122,16 @@ export function getMockGameState(): GameState {
       EventTime: 20 * 60 + 48,
       KillerName: "MockPlayer",
     },
-  ];
+];
 
+export function getMockGameState(): GameState {
+  time += 1;
+
+
+  const mockEvents = mockEventTimeline.filter(
+    (event) => event.EventTime <= time,
+  );
+  
    return {
     phase: "in-game",
     gameTime: time,

@@ -140,7 +140,7 @@ export default function MainBar({ gameState }: MainBarProps) {
         }}
       >
         <TeamHeader 
-          name={blueTeam.name} 
+          tag={blueTeam.tag ?? ''} 
           logo={blueTeam.logoUrl} 
           side="blue"
         />
@@ -163,7 +163,7 @@ export default function MainBar({ gameState }: MainBarProps) {
       >
       
         <TeamHeader
-          name={redTeam.name}
+          tag={redTeam.tag ?? ''}
           logo={redTeam.logoUrl}
           side="red"
         />

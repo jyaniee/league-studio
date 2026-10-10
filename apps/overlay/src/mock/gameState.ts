@@ -19,6 +19,7 @@ export const initialGameState: GameState = {
   blueTeam: {
     side: 'blue',
     name: 'KT',
+    tag: 'KT',
     logoUrl: ktLogo,
     kills: 12,
     towers: 4,
@@ -45,6 +46,7 @@ export const initialGameState: GameState = {
   redTeam: {
     side: 'red',
     name: 'HLE',
+    tag: 'HLE',
     logoUrl: hleLogo,
     kills: 8,
     towers: 2,

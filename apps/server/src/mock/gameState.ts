@@ -131,7 +131,7 @@ export function getMockGameState(): GameState {
   const mockEvents = mockEventTimeline.filter(
     (event) => event.EventTime <= time,
   );
-  
+
    return {
     phase: "in-game",
     gameTime: time,
@@ -139,6 +139,7 @@ export function getMockGameState(): GameState {
     blueTeam: {
       side: "blue",
       name: "BLUE",
+      tag: "BLUE",
       logoUrl: undefined,
       players: bluePlayers,
       kills: Math.floor(time / 5),
@@ -153,6 +154,7 @@ export function getMockGameState(): GameState {
     redTeam: {
       side: "red",
       name: "RED",
+      tag: "RED",
       logoUrl: undefined,
       players: redPlayers,
       kills: Math.floor(time / 7),

@@ -63,6 +63,34 @@ pnpm dev:overlay
 pnpm dev
 ```
 
+### Preview Mode
+
+Backend Server 연결 없이 Overlay의 UI를 확인하려는 경우 Preview Mode를 사용할 수 있습니다.
+
+일반 실행에서는 WebSocket을 통해 Backend Server의 실제 `GameState`를 수신하며, 데이터가 수신되기 전까지 Overlay를 렌더링하지 않습니다.
+
+```text
+http://localhost:5173/
+```
+
+Preview Mode는 URL에 `preview=1` 쿼리 파라미터를 추가하여 사용할 수 있습니다.
+
+```text
+http://localhost:5173/?preview=1
+```
+
+Preview Mode에서는 `src/mock/gameState.ts`의 정적 `GameState`를 사용하며 WebSocket에 연결하지 않습니다.
+
+#### Server Mock과의 차이
+
+- `USE_MOCK=true`
+  - Backend Server에서 Mock `GameState`를 생성합니다.
+  - WebSocket을 포함한 Server → Overlay 전체 데이터 흐름을 테스트할 때 사용합니다.
+
+- `?preview=1`
+  - Overlay 내부의 정적 Mock 데이터를 직접 사용합니다.
+  - Backend Server 없이 UI 레이아웃과 디자인을 빠르게 확인할 때 사용합니다.
+
 ---
 
 ## Build

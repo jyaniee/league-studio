@@ -7,14 +7,13 @@ type BottomScoreboardProps = {
 };
 const EDGE =12;
 const GAP = {
-    wardToItems: 30,
-    itemsToStats: 6,
+    wardToItems: 12,
+    itemsToStats: 8,
     kdaToCs: 8,
     csToChampion: 10,
     center : 40,
 };
 const spacer = (width: number) : React.CSSProperties => ({width, flexShrink: 0 });
-const flexSpacer = (minWidth: number) : React.CSSProperties => ({ flex: 1, minWidth });
 
 const WARD_ITEM_ID: Record<WardType, number> = {
     stealth: 3340,
@@ -52,9 +51,10 @@ function WardSlot ({ ward } : { ward? : WardType | null }) {
     );
 }
 
-function ItemSlots({ items }: {items?: PlayerState["items"] }) {
+function ItemSlots({ items, side }: {items?: PlayerState["items"];side: "blue" | "red"}) {
     return ( 
-        <div style={styles.itemContainer}>
+        <div style={{...styles.itemContainer, flexDirection: side === "blue" ? "row-reverse" : "row" }}>
+
             {toSixSlots(items).map ((id, i) => (
                 <div key={i} style={styles.itemSlot}>
                     {id !== null && <SafeImg src={itemIcon(id)} alt="" />}
@@ -94,12 +94,12 @@ function ChampionPortrait({ name }: {name?: string}) {
                     <WardSlot ward={blue?.ward} />
                     <div style={spacer(GAP .wardToItems)}></div>
 
-                    <ItemSlots items={blue?.items} />
+                    <ItemSlots items={blue?.items} side="blue" />
 
-                    <div style={flexSpacer(GAP.itemsToStats)}></div>
+                    <div style={spacer(GAP.itemsToStats)}></div>
 
                     <div style={styles.statsGroup}>
-                        <span style={styles.kdaText}>{kdaText(blue)}</span>
+                        <span style={styles.kdaText}><span style={{ flexShrink: 0}}>{kdaText(blue)}</span></span>
                         <span style={{...styles.csTest,textAlign: 'right'}}>{csText(blue)}</span>
                         </div>
                         
@@ -118,11 +118,11 @@ function ChampionPortrait({ name }: {name?: string}) {
 
                         <div style={styles.statsGroup}>
                             <span style={{...styles.csTest,textAlign: 'left'}}>{csText(red)}</span>
-                            <span style={styles.kdaText}>{kdaText(red)}</span>
+                            <span style={styles.kdaText}><span style={{flexShrink: 0}}>{kdaText(red)}</span></span>
                         </div>
-                        <div style={flexSpacer(GAP.itemsToStats)}></div>
+                        <div style={spacer(GAP.itemsToStats)}></div>
 
-                        <ItemSlots items={red?.items} />
+                        <ItemSlots items={red?.items} side="red"/>
 
                         <div style={spacer(GAP .wardToItems)}></div>
 
@@ -233,8 +233,10 @@ function ChampionPortrait({ name }: {name?: string}) {
         kdaText: {
                 fontSize: '18px',
                 fontWeight: 400,
-                minWidth: '44px',
-                textAlign: 'center',
+                width: '72px',
+                display: 'flex',
+                justifyContent: 'center',
+                flexShrink: 0,
                 fontVariantNumeric: 'tabular-nums',
                 whiteSpace: 'nowrap',
             },

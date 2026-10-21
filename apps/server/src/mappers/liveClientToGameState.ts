@@ -7,8 +7,9 @@ import type {
   TeamSide,
   WardType,
 } from "@league-studio/shared-types";
-import type { LiveClientRawData } from "../data-sources/liveClientTypes";
 import { calculateObjectives } from "../calculators/objectiveTimers";
+import { hasItemPrices, itemPrice } from "../data-sources/itemPrices";
+import type { LiveClientRawData } from "../data-sources/liveClientTypes";
 
 type LiveClientEvent = LiveClientRawData["eventData"]["Events"][number];
 type LiveClientPlayer = LiveClientRawData["players"][number];
@@ -142,12 +143,35 @@ function toWard(itemId: number | undefined): WardType | null {
   return WARD_BY_ITEM_ID[itemId] ?? null;
 }
 
-function mapPlayerLoadout(items: LiveClientItem[] | undefined): {
+function placeItemsTowardCenter(itemIds: number[], side: TeamSide): ItemSlot[] {
+  const inventory = emptyItemSlots();
+  const ranked = [...itemIds].sort((left, right) => {
+    const priceDiff = itemPrice(right) - itemPrice(left);
+    if (priceDiff !== 0) {
+      return priceDiff;
+    }
+
+    return left - right;
+  });
+
+  ranked.forEach((itemId, index) => {
+    const slot = side === "blue" ? ITEM_SLOT_COUNT - 1 - index : index;
+    inventory[slot] = itemId;
+  });
+
+  return inventory;
+}
+
+function mapPlayerLoadout(
+  items: LiveClientItem[] | undefined,
+  side: TeamSide,
+): {
   items: ItemSlot[];
   ward: WardType | null;
 } {
   const inventory = emptyItemSlots();
   let trinketItemId: number | undefined;
+  const ownedIds: number[] = [];
 
   for (const item of items ?? []) {
     if (item.slot === TRINKET_SLOT) {
@@ -155,12 +179,21 @@ function mapPlayerLoadout(items: LiveClientItem[] | undefined): {
       continue;
     }
 
-    if (item.slot >= 0 && item.slot < ITEM_SLOT_COUNT) {
+    if (item.slot < 0 || item.slot >= ITEM_SLOT_COUNT) {
+      continue;
+    }
+
+    if (hasItemPrices()) {
+      ownedIds.push(item.itemID);
+    } else {
       inventory[item.slot] = item.itemID;
     }
   }
 
-  return { items: inventory, ward: toWard(trinketItemId) };
+  return {
+    items: hasItemPrices() ? placeItemsTowardCenter(ownedIds, side) : inventory,
+    ward: toWard(trinketItemId),
+  };
 }
 
 type RankedPlayer = {
@@ -176,11 +209,12 @@ function mapRankedPlayers(players: LiveClientPlayer[]): RankedPlayer[] {
       return [];
     }
 
-    const { items, ward } = mapPlayerLoadout(player.items);
+    const side = toTeamSide(player.team);
+    const { items, ward } = mapPlayerLoadout(player.items, side);
 
     return [
       {
-        side: toTeamSide(player.team),
+        side,
         player: {
           position,
           championName: toChampionKey(player.rawChampionName),

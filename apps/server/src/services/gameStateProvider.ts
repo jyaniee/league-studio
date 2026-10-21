@@ -3,6 +3,10 @@ import { getMockGameState } from "../mock/gameState";
 import { getLiveClientGameState } from "./gameStateService";
 import { mergeAgentObjectivesIntoGameState } from "./agentObjectiveStore";
 import { mergeObserverStateIntoGameState } from "./observerStateStore";
+import { applyOcrCs } from "./ocrCsStore";
+import { startOcrCsIngest } from "./ocrCsIngest";
+
+startOcrCsIngest();
 
 /**
  * WebSocket/HTTP에 제공할 현재 GameState 스냅샷.
@@ -18,7 +22,7 @@ export async function getCurrentGameState(): Promise<GameState | null> {
     const liveGameState = await getLiveClientGameState();
     const withAgentObjectives = mergeAgentObjectivesIntoGameState(liveGameState);
 
-    return mergeObserverStateIntoGameState(withAgentObjectives);
+    return applyOcrCs(mergeObserverStateIntoGameState(withAgentObjectives));
   } catch (error) {
     console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
     return mergeObserverStateIntoGameState(getMockGameState());

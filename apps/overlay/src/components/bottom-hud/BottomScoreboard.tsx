@@ -51,11 +51,11 @@ function WardSlot ({ ward } : { ward? : WardType | null }) {
     );
 }
 
-function ItemSlots({ items, side }: {items?: PlayerState["items"];side: "blue" | "red"}) {
+function ItemSlots({ items }: {items?: PlayerState["items"]}) {
     return ( 
-        <div style={{...styles.itemContainer, flexDirection: side === "blue" ? "row-reverse" : "row" }}>
+        <div style={styles.itemContainer }>
 
-            {toSixSlots(items).map ((id, i) => (
+{toSixSlots(items).map ((id, i) => (
                 <div key={i} style={styles.itemSlot}>
                     {id !== null && <SafeImg src={itemIcon(id)} alt="" />}
                     </div>
@@ -94,7 +94,7 @@ function ChampionPortrait({ name }: {name?: string}) {
                     <WardSlot ward={blue?.ward} />
                     <div style={spacer(GAP .wardToItems)}></div>
 
-                    <ItemSlots items={blue?.items} side="blue" />
+                    <ItemSlots items={blue?.items} />
 
                     <div style={spacer(GAP.itemsToStats)}></div>
 
@@ -122,7 +122,7 @@ function ChampionPortrait({ name }: {name?: string}) {
                         </div>
                         <div style={spacer(GAP.itemsToStats)}></div>
 
-                        <ItemSlots items={red?.items} side="red"/>
+                        <ItemSlots items={red?.items} />
 
                         <div style={spacer(GAP .wardToItems)}></div>
 

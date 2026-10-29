@@ -21,8 +21,9 @@ export async function getCurrentGameState(): Promise<GameState | null> {
     // return mergeAgentObjectivesIntoGameState(liveGameState);
 
     return mergeObserverStateIntoGameState(withAgentTowers);
-  } catch (error) {
-    console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
-    return mergeObserverStateIntoGameState(getMockGameState());
+  } catch {
+    //console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
+    //return mergeObserverStateIntoGameState(getMockGameState());
+    return null;
   }
 }

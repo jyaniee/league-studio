@@ -1,5 +1,6 @@
 import type {
   DragonType,
+  GameObjectives,
   GameState,
   ItemSlot,
   PlayerPosition,
@@ -210,11 +211,16 @@ function playersForSide(players: RankedPlayer[], side: TeamSide): PlayerState[] 
 export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
   const gameTime = raw.gameStats.gameTime;
   const events = addKillerTeamToEvents(raw.eventData.Events ?? [], raw.players);
+
+  const hasGameStarted = events.some(
+    (event) => event.EventName === "GameStart",
+  );
+
   const rankedPlayers = mapRankedPlayers(raw.players);
 
   return {
-    phase: "in-game",
-    gameTime: Math.floor(gameTime),
+    phase: hasGameStarted ? "in-game" : "pre-game",
+    gameTime: hasGameStarted ? Math.floor(gameTime) : 0,
     blueTeam: {
       side: "blue",
       name: "BLUE",
@@ -241,8 +247,38 @@ export function mapLiveClientToGameState(raw: LiveClientRawData): GameState {
       barons: countTeamObjective(events, "CHAOS", "BaronKill"),
       players: playersForSide(rankedPlayers, "red"),
     },
-    objectives: calculateObjectives(gameTime, events),
+    objectives: hasGameStarted ? calculateObjectives(gameTime, events) : createPreGameObjectives(),
     source: "live-client-api",
     updatedAt: new Date().toISOString(),
+  };
+}
+
+function createPreGameObjectives(): GameObjectives {
+  return {
+    dragon: {
+      status: "inactive",
+      isAlive: false,
+      canRespawn: true,
+    },
+    elder: {
+      status: "inactive",
+      isAlive: false,
+      canRespawn: true,
+    },
+    baron: {
+      status: "inactive",
+      isAlive: false,
+      canRespawn: true,
+    },
+    herald: {
+      status: "inactive",
+      isAlive: false,
+      canRespawn: true,
+    },
+    voidgrubs: {
+      status: "inactive",
+      isAlive: false,
+      canRespawn: false,
+    },
   };
 }

@@ -7,9 +7,7 @@
     "watch": "tsx src/watchGame.ts"
   },
   "dependencies": {
-    "jimp": "^1.6.0",
-    "node-screenshots": "^0.2.8",
-    "tesseract.js": "^6.0.1"
+    "node-screenshots": "^0.2.8"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

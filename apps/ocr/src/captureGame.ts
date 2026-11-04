@@ -1,7 +1,7 @@
 import { Window } from "node-screenshots";
+import type { RgbaFrame } from "./frame.js";
 
-// "League of Legends"는 경기 중 최소화되는 클라이언트다.
-// 화면에 보이는 경기 창 이름은 "League of Legends (TM) Client"다.
+// 경기 중 최소화되는 클라이언트 제목은 "League of Legends"라서 쓰지 않음.
 const GAME_WINDOW_TITLE = "League of Legends (TM) Client";
 
 function isGameWindow(window: Window): boolean {
@@ -23,7 +23,7 @@ function isVisible(window: Window): boolean {
   }
 }
 
-export async function captureGamePng(): Promise<Buffer> {
+export async function captureGameFrame(): Promise<RgbaFrame> {
   let games: Window[];
   try {
     games = Window.all().filter(isGameWindow);
@@ -42,7 +42,16 @@ export async function captureGamePng(): Promise<Buffer> {
 
   try {
     const image = await game.captureImage();
-    return await image.toPng();
+    const rgba = image.toRawSync();
+    if (rgba.length !== image.width * image.height * 4) {
+      throw new Error("raw size");
+    }
+
+    return {
+      width: image.width,
+      height: image.height,
+      rgba,
+    };
   } catch {
     throw new Error("게임 화면을 캡처하지 못했습니다.");
   }

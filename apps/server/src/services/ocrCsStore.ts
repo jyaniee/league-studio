@@ -4,6 +4,7 @@ import type {
   PlayerState,
   TeamSide,
 } from "@league-studio/shared-types";
+import { isFreshLiveOcr } from "./ocrFreshness";
 
 const POSITION_ORDER: PlayerPosition[] = [
   "TOP",
@@ -12,8 +13,6 @@ const POSITION_ORDER: PlayerPosition[] = [
   "BOTTOM",
   "UTILITY",
 ];
-
-const FRESH_MS = 30_000;
 
 export type OcrCsSide = Array<number | null>;
 
@@ -121,11 +120,7 @@ function applyTeam(
 }
 
 export function applyOcrCs(gameState: GameState): GameState {
-  if (latest === null || gameState.source !== "live-client-api") {
-    return gameState;
-  }
-
-  if (Date.now() - latest.receivedAt > FRESH_MS) {
+  if (latest === null || !isFreshLiveOcr(gameState, latest.receivedAt)) {
     return gameState;
   }
 

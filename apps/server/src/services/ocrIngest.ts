@@ -1,8 +1,9 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { Buffer } from "node:buffer";
 import { parseOcrCsPayload, setOcrCs } from "./ocrCsStore";
+import { parseOcrGoldPayload, setOcrGold } from "./ocrGoldStore";
 
-const OCR_CS_PORT = 3003;
+const OCR_PORT = 3003;
 
 let started = false;
 
@@ -30,7 +31,7 @@ async function readJsonBody(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(rawBody) as unknown;
 }
 
-export function startOcrCsIngest(): void {
+export function startOcrIngest(): void {
   if (started) {
     return;
   }
@@ -38,13 +39,26 @@ export function startOcrCsIngest(): void {
   started = true;
   const server = createServer(async (req, res) => {
     const url = req.url?.split("?")[0];
-    if (req.method !== "POST" || url !== "/ocr/cs") {
+    if (req.method !== "POST" || (url !== "/ocr/cs" && url !== "/ocr/gold")) {
       sendJson(res, 404, { ok: false, error: "Not found" });
       return;
     }
 
     try {
-      const payload = parseOcrCsPayload(await readJsonBody(req));
+      const body = await readJsonBody(req);
+      if (url === "/ocr/gold") {
+        const payload = parseOcrGoldPayload(body);
+        if (payload === null) {
+          sendJson(res, 400, { ok: false, error: "Invalid OCR gold payload" });
+          return;
+        }
+
+        setOcrGold(payload);
+        sendJson(res, 200, { ok: true, status: "stored" });
+        return;
+      }
+
+      const payload = parseOcrCsPayload(body);
       if (payload === null) {
         sendJson(res, 400, { ok: false, error: "Invalid OCR CS payload" });
         return;
@@ -53,12 +67,12 @@ export function startOcrCsIngest(): void {
       setOcrCs(payload);
       sendJson(res, 200, { ok: true, status: "stored" });
     } catch (error) {
-      console.error("Failed to receive OCR CS:", error);
+      console.error("Failed to receive OCR payload:", error);
       sendJson(res, 400, { ok: false, error: "Invalid JSON payload" });
     }
   });
 
-  server.listen(OCR_CS_PORT, () => {
-    console.log(`OCR CS ingest running on http://localhost:${OCR_CS_PORT}`);
+  server.listen(OCR_PORT, () => {
+    console.log(`OCR ingest running on http://localhost:${OCR_PORT} (/ocr/cs, /ocr/gold)`);
   });
 }

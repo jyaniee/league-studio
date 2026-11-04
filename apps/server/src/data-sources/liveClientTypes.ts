@@ -23,13 +23,35 @@ export interface LiveClientItem {
   displayName?: string;
 }
 
+export interface LiveClientRune {
+  id?: number;
+  displayName?: string;
+}
+
+export interface LiveClientSummonerSpell {
+  displayName?: string;
+  rawDescription?: string;
+  rawDisplayName?: string;
+}
+
 export interface LiveClientPlayer {
   summonerName: string;
   championName: string;
   rawChampionName?: string;
   position?: string;
   team: "ORDER" | "CHAOS";
+  isDead?: boolean;
+  respawnTimer?: number;
   items?: LiveClientItem[];
+  summonerSpells?: {
+    summonerSpellOne?: LiveClientSummonerSpell;
+    summonerSpellTwo?: LiveClientSummonerSpell;
+  };
+  runes?: {
+    keystone?: LiveClientRune;
+    primaryRuneTree?: LiveClientRune;
+    secondaryRuneTree?: LiveClientRune;
+  };
   scores?: {
     kills?: number;
     deaths?: number;

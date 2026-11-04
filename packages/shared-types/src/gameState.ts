@@ -77,6 +77,13 @@ export type PlayerPosition =
   | "BOTTOM"
   | "UTILITY";
 
+export type RuneStyle =
+  | "precision"
+  | "domination"
+  | "sorcery"
+  | "inspiration"
+  | "resolve";
+
 export interface PlayerState {
   position: PlayerPosition;
 
@@ -94,6 +101,13 @@ export interface PlayerState {
 
   items : ItemSlot[]; //아이템 6칸 (와드 제외)
   ward : WardType | null; // 보유 와드 종류, 없으면 null
+
+  isDead: boolean;
+  respawnRemainingSeconds: number; // 부활까지 남은 초. 살아 있으면 0
+  // Data Dragon 소환사 주문 키. 첫 값은 D, 둘째는 F. 예: "SummonerFlash"
+  summonerSpells: [string | null, string | null];
+  keystoneId: number | null; // 핵심 룬 번호.
+  secondaryRuneStyle: RuneStyle | null; // 보조 룬 계열.
 }
 
 export interface TeamState {

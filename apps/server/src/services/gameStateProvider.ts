@@ -6,12 +6,13 @@ import { mergeObserverStateIntoGameState } from "./observerStateStore";
 import { applyOcrCs } from "./ocrCsStore";
 import { applyOcrGold } from "./ocrGoldStore";
 import { startOcrIngest } from "./ocrIngest";
+import { mergeAgentTowersIntoGameState } from "./agentTowerStore";
 
 startOcrIngest();
 
 /**
  * WebSocket/HTTP에 제공할 현재 GameState 스냅샷.
- * USE_MOCK=false일 때 Live Client API를 사용하고, 실패 시 mock으로 fallback한다.
+ * USE_MOCK=false일 때 Live Client API를 사용하고, 실패 시 null을 반환한다.
  */
 export async function getCurrentGameState(): Promise<GameState | null> {
   if (process.env.USE_MOCK !== "false") {
@@ -22,10 +23,13 @@ export async function getCurrentGameState(): Promise<GameState | null> {
   try {
     const liveGameState = await getLiveClientGameState();
     const withAgentObjectives = mergeAgentObjectivesIntoGameState(liveGameState);
+    const withAgentTowers = mergeAgentTowersIntoGameState(withAgentObjectives);
+    // return mergeAgentObjectivesIntoGameState(liveGameState);
 
-    return applyOcrGold(applyOcrCs(mergeObserverStateIntoGameState(withAgentObjectives)));
-  } catch (error) {
-    console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
-    return mergeObserverStateIntoGameState(getMockGameState());
+    return applyOcrGold(applyOcrCs(mergeObserverStateIntoGameState(withAgentTowers)));
+  } catch {
+    //console.warn("[GameState] Live Client API failed: return pure mock fallback", error);
+    //return mergeObserverStateIntoGameState(getMockGameState());
+    return null;
   }
 }

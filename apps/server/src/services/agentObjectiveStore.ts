@@ -1,5 +1,3 @@
-let currentMatchId: string | null = null;
-
 import type {
   AgentObjectiveEventPayload,
   DragonType,
@@ -7,13 +5,14 @@ import type {
   TeamSide,
 } from "@league-studio/shared-types";
 
+let currentMatchId: string | null = null;
+
 type ObjectiveSideState = {
   dragons: Exclude<DragonType, "elder">[];
   elderDragons: number;
   voidgrubs: number;
   heralds: number;
   barons: number;
-  towers: number;
 };
 
 export type AgentObjectiveState = {
@@ -34,7 +33,6 @@ const createEmptySideState = (): ObjectiveSideState => ({
   voidgrubs: 0,
   heralds: 0,
   barons: 0,
-  towers: 0,
 });
 
 const state: AgentObjectiveState = {
@@ -152,10 +150,6 @@ export function addAgentObjectiveEvent(
       targetSide.barons += 1;
       break;
     }
-    case "tower": {
-      targetSide.towers += 1;
-      break;
-    }
   }
 
   processedEventKeys.add(key);
@@ -180,7 +174,6 @@ export function mergeAgentObjectivesIntoGameState(
       voidgrubs: Math.max(gameState.blueTeam.voidgrubs, agentState.blue.voidgrubs),
       heralds: Math.max(gameState.blueTeam.heralds, agentState.blue.heralds),
       barons: Math.max(gameState.blueTeam.barons, agentState.blue.barons),
-      towers: Math.max(gameState.blueTeam.towers, agentState.blue.towers),
     },
 
     redTeam: {
@@ -192,7 +185,6 @@ export function mergeAgentObjectivesIntoGameState(
       voidgrubs: Math.max(gameState.redTeam.voidgrubs, agentState.red.voidgrubs),
       heralds: Math.max(gameState.redTeam.heralds, agentState.red.heralds),
       barons: Math.max(gameState.redTeam.barons, agentState.red.barons),
-      towers: Math.max(gameState.redTeam.towers, agentState.red.towers),
     },
 
     updatedAt: new Date().toISOString(),

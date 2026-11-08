@@ -8,9 +8,15 @@ import { initialGameState } from './mock/gameState';
 import { connectGameState } from './services/socket';
 
 export default function App() {
-  const [gameState, setGameState] = useState<GameState>(initialGameState);
+  const usePreview = new URLSearchParams(window.location.search).get('preview') === '1';
+
+  const [gameState, setGameState] = useState<GameState | null>(usePreview ? initialGameState : null,);
 
   useEffect(() => {
+    if (usePreview) {
+      return;
+    }
+
     const connection = connectGameState((nextState) => {
       setGameState(nextState);
     });
@@ -18,7 +24,11 @@ export default function App() {
     return () => {
       connection.close();
     };
-  }, []);
+  }, [usePreview]);
+
+  if (gameState === null){
+    return null;
+  } 
 
   return (
     <>

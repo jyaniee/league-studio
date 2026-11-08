@@ -4,7 +4,7 @@ import baronIcon from "../../assets/objectives/major/baron.png";
 import heraldIcon from "../../assets/objectives/major/herald.png";
 import voidgrubIcon from "../../assets/objectives/major/voidgrub.png";
 
-import cloudDrakeIcon from "../../assets/objectives/dragons/chemtech-drake.png";
+import cloudDrakeIcon from "../../assets/objectives/dragons/cloud-drake.png";
 import infernalDrakeIcon from "../../assets/objectives/dragons/infernal-drake.png";
 import mountainDrakeIcon from "../../assets/objectives/dragons/mountain-drake.png";
 import oceanDrakeIcon from "../../assets/objectives/dragons/ocean-drake.png";

@@ -11,8 +11,9 @@ import type {
 import { 
     addObserverMatchInfo, addObserverStatePatch, getObserverState, resetObserverState,
 } from "./services/observerStateStore";
-import { send } from "node:process";
 // import { send } from "node:process";
+import { resetAgentObjectiveStore } from "./services/agentObjectiveStore";
+import { resetAgentTowerStore } from "./services/agentTowerStore";
 
 function sendJson(
     res: ServerResponse,
@@ -52,8 +53,10 @@ export function startObserverIngestServer(port: number): void {
             return;
         }
 
-        if (req.method === "POST" && url === "/observer/reset"){
+        if (req.method === "POST" && url === "/observer/reset") {
             resetObserverState();
+            resetAgentObjectiveStore();
+            resetAgentTowerStore();
 
             const state = getObserverState();
 
@@ -105,7 +108,7 @@ export function startObserverIngestServer(port: number): void {
                     appliedFields: result.appliedFields,
                     ignoredFields: result.ignoredFields,
                     state: result.state,
-                });;
+                });
             } catch (error) {
                 console.error("Failed to receive observer state patch:", error);
                 sendJson(res, 400, {

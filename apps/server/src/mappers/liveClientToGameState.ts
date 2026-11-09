@@ -5,11 +5,13 @@ import type {
   ItemSlot,
   PlayerPosition,
   PlayerState,
+  RuneStyle,
   TeamSide,
   WardType,
 } from "@league-studio/shared-types";
-import type { LiveClientRawData } from "../data-sources/liveClientTypes";
 import { calculateObjectives } from "../calculators/objectiveTimers";
+import { hasItemPrices, itemPrice } from "../data-sources/itemPrices";
+import type { LiveClientRawData } from "../data-sources/liveClientTypes";
 
 type LiveClientEvent = LiveClientRawData["eventData"]["Events"][number];
 type LiveClientPlayer = LiveClientRawData["players"][number];
@@ -32,6 +34,16 @@ const WARD_BY_ITEM_ID: Record<number, WardType> = {
   3363: "farsight",
   3330: "effigy",
 };
+
+const RUNE_STYLE_BY_ID: Record<number, RuneStyle> = {
+  8000: "precision",
+  8100: "domination",
+  8200: "sorcery",
+  8300: "inspiration",
+  8400: "resolve",
+};
+
+const SUMMONER_SPELL_KEY = /SummonerSpell_([A-Za-z0-9]+)/;
 
 function countTeamObjective(
   events: LiveClientEvent[],
@@ -143,12 +155,66 @@ function toWard(itemId: number | undefined): WardType | null {
   return WARD_BY_ITEM_ID[itemId] ?? null;
 }
 
-function mapPlayerLoadout(items: LiveClientItem[] | undefined): {
+function toSummonerSpellKey(
+  spell: { rawDescription?: string; rawDisplayName?: string } | undefined,
+): string | null {
+  const source = spell?.rawDescription ?? spell?.rawDisplayName ?? "";
+  return source.match(SUMMONER_SPELL_KEY)?.[1] ?? null;
+}
+
+function toKeystoneId(id: number | undefined): number | null {
+  if (id === undefined || !Number.isInteger(id)) {
+    return null;
+  }
+
+  return id;
+}
+
+function toRuneStyle(id: number | undefined): RuneStyle | null {
+  if (id === undefined) {
+    return null;
+  }
+
+  return RUNE_STYLE_BY_ID[id] ?? null;
+}
+
+function toRespawnRemainingSeconds(isDead: boolean, respawnTimer: number | undefined): number {
+  if (!isDead || respawnTimer === undefined || !Number.isFinite(respawnTimer) || respawnTimer <= 0) {
+    return 0;
+  }
+
+  return Math.ceil(respawnTimer);
+}
+
+function placeItemsTowardCenter(itemIds: number[], side: TeamSide): ItemSlot[] {
+  const inventory = emptyItemSlots();
+  const ranked = [...itemIds].sort((left, right) => {
+    const priceDiff = itemPrice(right) - itemPrice(left);
+    if (priceDiff !== 0) {
+      return priceDiff;
+    }
+
+    return left - right;
+  });
+
+  ranked.forEach((itemId, index) => {
+    const slot = side === "blue" ? ITEM_SLOT_COUNT - 1 - index : index;
+    inventory[slot] = itemId;
+  });
+
+  return inventory;
+}
+
+function mapPlayerLoadout(
+  items: LiveClientItem[] | undefined,
+  side: TeamSide,
+): {
   items: ItemSlot[];
   ward: WardType | null;
 } {
   const inventory = emptyItemSlots();
   let trinketItemId: number | undefined;
+  const ownedIds: number[] = [];
 
   for (const item of items ?? []) {
     if (item.slot === TRINKET_SLOT) {
@@ -156,12 +222,21 @@ function mapPlayerLoadout(items: LiveClientItem[] | undefined): {
       continue;
     }
 
-    if (item.slot >= 0 && item.slot < ITEM_SLOT_COUNT) {
+    if (item.slot < 0 || item.slot >= ITEM_SLOT_COUNT) {
+      continue;
+    }
+
+    if (hasItemPrices()) {
+      ownedIds.push(item.itemID);
+    } else {
       inventory[item.slot] = item.itemID;
     }
   }
 
-  return { items: inventory, ward: toWard(trinketItemId) };
+  return {
+    items: hasItemPrices() ? placeItemsTowardCenter(ownedIds, side) : inventory,
+    ward: toWard(trinketItemId),
+  };
 }
 
 type RankedPlayer = {
@@ -177,11 +252,13 @@ function mapRankedPlayers(players: LiveClientPlayer[]): RankedPlayer[] {
       return [];
     }
 
-    const { items, ward } = mapPlayerLoadout(player.items);
+    const side = toTeamSide(player.team);
+    const { items, ward } = mapPlayerLoadout(player.items, side);
+    const isDead = player.isDead === true;
 
     return [
       {
-        side: toTeamSide(player.team),
+        side,
         player: {
           position,
           championName: toChampionKey(player.rawChampionName),
@@ -191,6 +268,14 @@ function mapRankedPlayers(players: LiveClientPlayer[]): RankedPlayer[] {
           cs: player.scores?.creepScore ?? 0,
           items,
           ward,
+          isDead,
+          respawnRemainingSeconds: toRespawnRemainingSeconds(isDead, player.respawnTimer),
+          summonerSpells: [
+            toSummonerSpellKey(player.summonerSpells?.summonerSpellOne),
+            toSummonerSpellKey(player.summonerSpells?.summonerSpellTwo),
+          ],
+          keystoneId: toKeystoneId(player.runes?.keystone?.id),
+          secondaryRuneStyle: toRuneStyle(player.runes?.secondaryRuneTree?.id),
         },
       },
     ];

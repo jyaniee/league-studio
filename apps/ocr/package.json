@@ -1,0 +1,17 @@
+{
+  "name": "ocr",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "watch": "tsx src/watchGame.ts"
+  },
+  "dependencies": {
+    "node-screenshots": "^0.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.0"
+  }
+}
